@@ -1,17 +1,13 @@
-import express, { Request, Response } from "express";
+import express from "express";
+import routes from "./routes/routes";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
 app.use(express.json());
 
-// Routes
-app.get("/", (_req: Request, res: Response) => {
-  res.send("🚀 Backend TypeScript prêt !");
-});
+app.use("/api", routes);
 
-// Lancement du serveur
 app.listen(PORT, () => {
-  console.log(`✅ Serveur en cours d'exécution sur http://localhost:${PORT}`);
+  console.log(`✅ Serveur sur http://localhost:${PORT}`);
 });
