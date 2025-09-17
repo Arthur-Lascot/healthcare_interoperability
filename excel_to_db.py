@@ -31,15 +31,21 @@ def clean_df(df):
     df_cleaned = df.drop('Unnamed: 40', axis=1, inplace=True, errors='ignore')
     df_cleaned = df.drop('Unnamed: 42', axis=1, inplace=True, errors='ignore')
     df_cleaned = df.drop('Unnamed: 44', axis=1, inplace=True, errors='ignore')
-
     return df_cleaned
+
+def replace_NA_with_o_string(df):
+    """Replaces all NA values in the DataFrame with empty strings."""
+    df.fillna('o', inplace=True)
+    return df
+
 
 def main():
     print("Starting the Excel to DataFrame conversion...")
     file_path = 'ressource/matrice.xlsx'  # Path to your Excel file
     df = xlsx_to_df(file_path)
     clean_df(df)
-    # Display the first few rows of the DataFrame
+    replace_NA_with_o_string(df)
+
     print(df.head(15))
     with open('output.txt', 'w') as f:
         f.write(df.head(15).to_string())
