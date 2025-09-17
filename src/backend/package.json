@@ -1,11 +1,11 @@
 {
   "name": "backend",
+  "type": "module",
   "version": "1.0.0",
   "main": "index.js",
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "express": "^5.1.0"
   },
@@ -17,9 +17,10 @@
     "typescript": "^5.9.2"
   },
   "scripts": {
-  "dev": "nodemon --watch src -e ts --exec ts-node src/index.ts",
-  "build": "tsc",
-  "start": "node dist/index.js",
-  "clean": "rm -rf dist"
-  }
+    "dev": "nodemon --watch src -e ts --exec ts-node src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "clean": "rm -rf dist"
+  },
+  "description": ""
 }
