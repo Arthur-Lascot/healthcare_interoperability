@@ -78,6 +78,10 @@ export const getFileFromUUID = (uuid: UUID): FileEntity => {
     return file;
 };
 
+export const getAllFiles = (): FileEntity[] => {
+    return files;
+}
+
 export const createFile = (file: FileEntity): boolean => {
     files.push(file);
     return true;
