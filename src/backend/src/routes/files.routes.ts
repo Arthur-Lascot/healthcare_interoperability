@@ -1,12 +1,12 @@
 import { Router, Request, Response } from "express";
+import * as FileController from "../controllers/files_controllers"
+import { asyncHandler } from "../middlewares/async_handler";
 
 const router = Router();
 
-router.get("/api/read", (_req: Request, res: Response) => {
-  res.json({ message: "pong" });
-});
+router.get("/file/:uuid", FileController.getFileController); 
 
-router.post("/api/save", (req: Request, res: Response) => {
+router.post("/save", (req: Request, res: Response) => {
   res.json({ received: req.body });
 });
 
