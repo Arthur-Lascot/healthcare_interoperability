@@ -1,5 +1,6 @@
 import React from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import SearchBar from '../components/SearchBar';
 
 const HomePage: React.FC = () => {
   const { user, logout, getToken } = useAuth();
@@ -34,6 +35,7 @@ const HomePage: React.FC = () => {
       </header>
 
       <main>
+        <SearchBar />
         <div style={{ marginBottom: '20px' }}>
           <h2>Informations utilisateur</h2>
           <div style={{ backgroundColor: '#f8f9fa', padding: '15px', borderRadius: '5px' }}>
