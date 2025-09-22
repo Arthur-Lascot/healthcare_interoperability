@@ -39,6 +39,31 @@ def replace_NA_with_o_string(df):
     return df
 
 
+def df_to_json(df, path):
+    """
+    Pour chaque ligne du df, crée un objet dont la clé est la valeur de la colonne 'LOINC',
+    et la valeur est un tableau d'objets {"colonne": <nom>, "value": <bool>} pour chaque colonne à droite de 'LOINC'.
+    Les 'x' deviennent True, les 'o' deviennent False.
+    """
+    import json
+    if 'LOINC' not in df.columns:
+        raise ValueError("La colonne 'LOINC' est absente du DataFrame.")
+    result = {}
+    loinc_idx = df.columns.get_loc('LOINC')
+    habil_cols = [col for col in df.columns[loinc_idx+1:] if col != 'Intitulé.1']
+    for _, row in df.iterrows():
+        loinc_val = str(row['LOINC'])
+        habil_arr = []
+        for col in habil_cols:
+            print(col)
+            if col == 'Intitulé.1' or col == 'Intitulé' or col == 'Unnamed: 36':
+                continue
+            val = row[col]
+            habil_arr.append(False if val == 'o' else True)
+        result[loinc_val] = habil_arr
+    with open(path, 'w', encoding='utf-8') as f:
+        json.dump(result, f, ensure_ascii=False, indent=2)
+
 def main():
     print("Starting the Excel to DataFrame conversion...")
     file_path = 'ressource/matrice.xlsx'  # Path to your Excel file
@@ -46,8 +71,10 @@ def main():
     clean_df(df)
     replace_NA_with_o_string(df)
 
-    print(df.head(15))
+    print(df)
     with open('output.txt', 'w') as f:
         f.write(df.head(15).to_string())
+
+    df_to_json(df, 'ressource/matrix_habilitation.json')
 
 main()
