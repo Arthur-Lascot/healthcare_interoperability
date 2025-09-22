@@ -27,6 +27,7 @@ def clean_df(df):
     df_cleaned = df.drop('Unnamed: 30', axis=1, inplace=True, errors='ignore')
     df_cleaned = df.drop('Unnamed: 32', axis=1, inplace=True, errors='ignore')
     df_cleaned = df.drop('Unnamed: 34', axis=1, inplace=True, errors='ignore')
+    df_cleaned = df.drop('Unnamed: 36', axis=1, inplace=True, errors='ignore')
     df_cleaned = df.drop('Unnamed: 38', axis=1, inplace=True, errors='ignore')
     df_cleaned = df.drop('Unnamed: 40', axis=1, inplace=True, errors='ignore')
     df_cleaned = df.drop('Unnamed: 42', axis=1, inplace=True, errors='ignore')
