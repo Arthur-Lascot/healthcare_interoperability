@@ -55,7 +55,7 @@ def df_to_json(df, path):
         loinc_val = str(row['LOINC'])
         habil_arr = []
         for col in habil_cols:
-            print(col)
+            #print(col)
             if col == 'Intitulé.1' or col == 'Intitulé' or col == 'Unnamed: 36':
                 continue
             val = row[col]
@@ -66,15 +66,14 @@ def df_to_json(df, path):
 
 def main():
     print("Starting the Excel to DataFrame conversion...")
-    file_path = 'ressource/matrice.xlsx'  # Path to your Excel file
+    file_path = 'matrice.xlsx'  # Path to your Excel file
     df = xlsx_to_df(file_path)
     clean_df(df)
     replace_NA_with_o_string(df)
-
-    print(df)
+    #print(df)
     with open('output.txt', 'w') as f:
         f.write(df.head(15).to_string())
 
-    df_to_json(df, 'ressource/matrix_habilitation.json')
+    df_to_json(df, 'matrix_habilitation.json')
 
 main()
