@@ -15,5 +15,8 @@
     "url": "https://github.com/Arthur-Lascot/healthcare_interoperability/issues"
   },
   "homepage": "https://github.com/Arthur-Lascot/healthcare_interoperability#readme",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "docker": "^1.0.0"
+  }
 }

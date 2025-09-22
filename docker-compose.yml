@@ -41,6 +41,36 @@ services:
     networks:
       - app-network
 
+  db:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_DB: document
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: motdepasse
+    networks:
+      - app-network
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  python:
+    build: ./python_app
+    depends_on:
+      - db
+    volumes:
+      - ./python_app:/app
+    working_dir: /app
+    environment:
+      - PYTHONUNBUFFERED=1
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=document
+      - DB_USER=postgres
+      - DB_PASSWORD=motdepasse
+
 networks:
   app-network:
     driver: bridge
+
+volumes:
+  pgdata:
