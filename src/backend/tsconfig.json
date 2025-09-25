@@ -2,14 +2,16 @@
   "compilerOptions": {
     "target": "ES2020",                         
     "module": "commonjs",                       
-    "rootDir": ".",                           
-    "outDir": "dist",                           
+    "rootDir": "src",                           
+    "outDir": "dist",
+    "typeRoots": ["./node_modules/@types", "./src/types"],
+    "types": ["node", "express"],           
     "strict": true,                             
     "esModuleInterop": true,                    
     "allowSyntheticDefaultImports": true,       
     "skipLibCheck": true,                       
     "forceConsistentCasingInFileNames": true    
   },
-  "include": ["."],
+  "include": ["src/**/*", "src/types/**/*"],
   "exclude": ["node_modules", "dist"]
 }
