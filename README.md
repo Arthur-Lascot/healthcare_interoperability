@@ -21,7 +21,7 @@ Le système sépare : - Les **documents** (stockés en
     -   JSONB pour les ressources FHIR (`DocumentReference`,
         `Observation`, etc.)
     -   Stockage binaire pour les documents (via `Binary`).
--   **Auth & Access Control** : RBAC ou ressource FHIR `Consent`.
+-   **Auth & Access Control** : Keycloak et matrice d'habilitation.
 
 ## Standards utilisés
 
