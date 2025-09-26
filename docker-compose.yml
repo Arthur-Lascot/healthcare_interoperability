@@ -22,6 +22,8 @@ services:
       - "3002:3002"
     environment:
       KEYCLOAK_URL: http://keycloak:8080
+    env_file:
+      - .env
     depends_on:
       - keycloak
     networks:
