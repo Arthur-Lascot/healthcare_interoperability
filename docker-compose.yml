@@ -62,11 +62,11 @@ services:
     working_dir: /app
     environment:
       - PYTHONUNBUFFERED=1
-      - DB_HOST=db
-      - DB_PORT=5432
-      - DB_NAME=document
-      - DB_USER=postgres
-      - DB_PASSWORD=motdepasse
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
 
 networks:
   app-network:
