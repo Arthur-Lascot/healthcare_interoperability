@@ -2,18 +2,22 @@ import * as FileRepository from "../repositories/file_repository"
 import { Role } from "../models/Roles"
 import { UUID } from "crypto"
 import { FileEntity } from "../entities/FileEntity"
+import rawHabilitation from "../habilitation_matrix.json"
+
+const habilitation: Record<string, boolean[]> = rawHabilitation;
 
 const isReadableBy = (file: FileEntity, role: Role,): boolean => {
-    return file.ReadableBy[role];
+    const accessList : boolean[] = habilitation[file.LOINC];
+    return accessList[role];
 }
 
-export const getFile = (role: Role, fileUUID: UUID): boolean => {
-    const file: FileEntity = FileRepository.getFileFromUUID(fileUUID);
+export const getFile = async (role: Role, fileUUID: UUID): Promise<boolean> => {
+    const file: FileEntity = await FileRepository.getFileFromUUID(fileUUID);
     return isReadableBy(file, role);
 }
 
-export const getAllAccessibleFile = (role: Role): FileEntity[] => {
-    const files: FileEntity[] = FileRepository.getAllFiles();
+export const getAllAccessibleFile = async (role: Role): Promise<FileEntity[]> => {
+    const files: FileEntity[] = await FileRepository.getAllFiles();
     let accessibleFiles: FileEntity[] = [];
     files.forEach((f: FileEntity) => { if (isReadableBy(f, role)) {accessibleFiles.push(f)} })
     return accessibleFiles;

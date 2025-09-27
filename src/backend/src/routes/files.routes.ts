@@ -4,7 +4,7 @@ import { asyncHandler } from "../middlewares/async_handler";
 
 const router = Router();
 
-router.get("/file/:uuid", FileController.getFileController); 
+router.get("/file/:uuid", asyncHandler(FileController.getFileController)); 
 
 router.post("/save", (req: Request, res: Response) => {
   res.json({ received: req.body });
