@@ -21,8 +21,9 @@ export async function initDb(): Promise<void> {
       uuid INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
       code INTEGER NOT NULL,
       class_code_display_name TEXT NOT NULL,
-      loinc INTEGER NOT NULL,
-      type_code_display_name TEXT NOT NULL
+      loinc TEXT NOT NULL,
+      type_code_display_name TEXT NOT NULL,
+      content TEXT
     )
   `);
 

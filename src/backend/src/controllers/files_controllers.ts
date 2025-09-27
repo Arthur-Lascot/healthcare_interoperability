@@ -11,7 +11,6 @@ export const getFileController = async (req: Request, res: Response): Promise<Re
 
     const uuid: UUID = req.params.uuid as UUID;
     const role: Role = req.role;
-
     const file: boolean = await FileService.getFile(role, uuid);
 
     return res.json(file);
@@ -21,7 +20,7 @@ export const createFileController = async (req: any, res: any) => {
 
     const body = req.body as Partial<FileEntity>;
 
-    if (!body || body.code === undefined || !body.classCodeDisplayName || body.LOINC === undefined || !body.typeCodeDisplayName) {
+    if (!body || body.code === undefined || !body.classCodeDisplayName || body.loinc === undefined || !body.typeCodeDisplayName) {
         throw new ValidationError("Missing or invalid fields in request body");
     }
 

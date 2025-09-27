@@ -7,7 +7,8 @@ import { UUID } from "crypto";
 const habilitation: Record<string, boolean[]> = rawHabilitation;
 
 const isReadableBy = (file: FileEntity, role: Role,): boolean => {
-    const accessList : boolean[] = habilitation[file.LOINC];
+
+    const accessList : boolean[] = habilitation[file.loinc];
     return accessList[role];
 }
 

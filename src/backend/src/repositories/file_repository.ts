@@ -13,20 +13,19 @@ const pool = new Pool({
 
 export const getFileFromUUID = async (uuid: UUID): Promise<FileEntity> => {
     const result = await pool.query(
-      "SELECT * FROM DocumentReference WHERE uuid = $1",
+      "SELECT * FROM documents WHERE uuid = $1;",
       [uuid]
     );
 
     if (result.rows.length === 0) {
         throw new FileNotFoundError(uuid);
     }
-
     return result.rows[0];
 };
 
 export const getAllFiles = async(): Promise<FileEntity[]> => {
     const result = await pool.query(
-      "SELECT * FROM DocumentReference",
+      "SELECT * FROM documents",
     );
 
     return result.rows;
@@ -40,7 +39,7 @@ export const createFile = async (file: FileEntity): Promise<number> => {
         [
             file.code,
             file.classCodeDisplayName,
-            file.LOINC,
+            file.loinc,
             file.typeCodeDisplayName,
             file.content || null
         ]
