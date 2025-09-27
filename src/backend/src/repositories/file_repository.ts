@@ -84,14 +84,15 @@ export const getAllFiles = (): FileEntity[] => {
 
 export const createFile = async (file: FileEntity): Promise<number> => {
     const result = await pool.query(
-        `INSERT INTO documents (code, class_code_display_name, loinc, type_code_display_name)
-         VALUES ($1, $2, $3, $4)
+        `INSERT INTO documents (code, class_code_display_name, loinc, type_code_display_name, content)
+         VALUES ($1, $2, $3, $4, $5)
          RETURNING uuid`,
         [
             file.Code,
             file.classCodeDisplayName,
             file.LOINC,
-            file.typeCodeDisplayName
+            file.typeCodeDisplayName,
+            file.content || null
         ]
     );
     return result.rows[0].uuid as number;

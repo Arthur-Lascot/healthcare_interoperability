@@ -24,6 +24,8 @@ export const createFileController = async (req: any, res: any) => {
         throw new ValidationError("Missing or invalid fields in request body");
     }
 
+    // content is optional, so we don't validate it
+
     const newId = await FileService.createFile(body as FileEntity);
 
     return res.status(201).json({ status: "created", uuid: newId });
