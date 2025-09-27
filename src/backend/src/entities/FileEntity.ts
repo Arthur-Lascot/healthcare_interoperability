@@ -2,7 +2,7 @@ import { UUID } from "crypto";
 
 export type FileEntity = {
     uuid:                   UUID;
-    code:                   string;
+    code:                   number;
     classCodeDisplayName:   string;
     LOINC:                  string;
     typeCodeDisplayName:    string;

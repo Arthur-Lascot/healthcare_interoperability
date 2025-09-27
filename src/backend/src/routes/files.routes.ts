@@ -6,8 +6,6 @@ const router = Router();
 
 router.get("/file/:uuid", asyncHandler(FileController.getFileController)); 
 
-router.post("/save", (req: Request, res: Response) => {
-  res.json({ received: req.body });
-});
+router.post("/document", asyncHandler(FileController.createFileController));
 
 export default router;

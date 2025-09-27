@@ -1,8 +1,8 @@
 import * as FileRepository from "../repositories/file_repository"
 import { Role } from "../models/Roles"
-import { UUID } from "crypto"
 import { FileEntity } from "../entities/FileEntity"
 import rawHabilitation from "../habilitation_matrix.json"
+import { UUID } from "crypto";
 
 const habilitation: Record<string, boolean[]> = rawHabilitation;
 
@@ -21,4 +21,8 @@ export const getAllAccessibleFile = async (role: Role): Promise<FileEntity[]> =>
     let accessibleFiles: FileEntity[] = [];
     files.forEach((f: FileEntity) => { if (isReadableBy(f, role)) {accessibleFiles.push(f)} })
     return accessibleFiles;
+}
+
+export const createFile = async (file: FileEntity): Promise<number> => {
+    return await FileRepository.createFile(file);
 }
