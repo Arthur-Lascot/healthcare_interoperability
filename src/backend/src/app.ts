@@ -23,7 +23,13 @@ app.use(express.json());
 
 //app.use("/api", user_routes);
 
-app.use(authMiddleware);
+// Public test route: allow POST /api/document without auth
+app.use((req, res, next) => {
+  if (req.path === "/api/document" && req.method === "POST") {
+    return next();
+  }
+  return authMiddleware(req, res, next);
+});
 
 app.use("/api", file_routes);
 

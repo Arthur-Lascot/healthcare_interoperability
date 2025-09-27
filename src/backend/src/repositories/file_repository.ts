@@ -1,10 +1,10 @@
-import { UUID } from "crypto";
 import { FileEntity } from "../entities/FileEntity";
 import { FileNotFoundError } from "../errors/FileNotFound";
+import { pool } from "../db";
 
 const files: FileEntity[] = [
   {
-    uuid: "11111111-1111-1111-1111-111111111111",
+    uuid: "1",
     Code: 1,
     classCodeDisplayName: "Laboratory Report",
     LOINC: 12345,
@@ -32,7 +32,7 @@ const files: FileEntity[] = [
     ]
   },
   {
-    uuid: "11111111-1111-1111-1111-111111111112",
+    uuid: "2",
     Code: 2,
     classCodeDisplayName: "Radiology Report",
     LOINC: 67890,
@@ -61,14 +61,14 @@ const files: FileEntity[] = [
   }
 ];
 
-export const fileExist = (uuid: UUID): boolean => {
+export const fileExist = (uuid: string): boolean => {
     const file = files.find(f => f.uuid === uuid);
     if (file)
         return true;
     return false;
 };
 
-export const getFileFromUUID = (uuid: UUID): FileEntity => {
+export const getFileFromUUID = (uuid: string): FileEntity => {
     const file = files.find(f => f.uuid === uuid);
 
     if (!file) {
@@ -82,7 +82,17 @@ export const getAllFiles = (): FileEntity[] => {
     return files;
 }
 
-export const createFile = (file: FileEntity): boolean => {
-    files.push(file);
-    return true;
+export const createFile = async (file: FileEntity): Promise<number> => {
+    const result = await pool.query(
+        `INSERT INTO documents (code, class_code_display_name, loinc, type_code_display_name)
+         VALUES ($1, $2, $3, $4)
+         RETURNING uuid`,
+        [
+            file.Code,
+            file.classCodeDisplayName,
+            file.LOINC,
+            file.typeCodeDisplayName
+        ]
+    );
+    return result.rows[0].uuid as number;
 }

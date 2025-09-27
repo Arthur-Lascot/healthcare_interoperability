@@ -20,8 +20,14 @@ services:
       - "3002:3002"
     environment:
       KEYCLOAK_URL: http://keycloak:8080
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: document
+      DB_USER: postgres
+      DB_PASSWORD: motdepasse
     depends_on:
       - keycloak
+      - db
     networks:
       - app-network
 

@@ -1,17 +1,30 @@
-import { UUID } from "crypto";
 import * as FileService from "../services/files_services"
-import { Request, Response } from "express"
+// Note: Using any here to avoid express type export issues
 import { Role } from "../models/Roles";
 import { ValidationError } from "../errors/AppError";
+import { FileEntity } from "../entities/FileEntity";
 
-export const getFileController = (req: Request, res: Response) => {
+export const getFileController = (req: any, res: any) => {
     if (!req.role)
         throw new ValidationError("No role found for user")
 
-    const uuid: UUID = req.params.uuid as UUID;
+    const uuid: string = req.params.uuid as string;
     const role: Role = req.role;
 
     const file = FileService.getFile(role, uuid);
 
     return res.json(file);
+}
+
+export const createFileController = async (req: any, res: any) => {
+
+    const body = req.body as Partial<FileEntity>;
+
+    if (!body || body.Code === undefined || !body.classCodeDisplayName || body.LOINC === undefined || !body.typeCodeDisplayName) {
+        throw new ValidationError("Missing or invalid fields in request body");
+    }
+
+    const newId = await FileService.createFile(body as FileEntity);
+
+    return res.status(201).json({ status: "created", uuid: newId });
 }
