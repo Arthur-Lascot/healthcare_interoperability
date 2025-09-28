@@ -1,6 +1,7 @@
 import React from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import SearchBar from '../components/SearchBar';
+import FileManagement from '../components/FileManagement';
 
 const HomePage: React.FC = () => {
   const { user, logout, getToken } = useAuth();
@@ -36,6 +37,12 @@ const HomePage: React.FC = () => {
 
       <main>
         <SearchBar />
+        
+        {/* File Management Section */}
+        <div style={{ marginBottom: '30px' }}>
+          <FileManagement />
+        </div>
+
         <div style={{ marginBottom: '20px' }}>
           <h2>Informations utilisateur</h2>
           <div style={{ backgroundColor: '#f8f9fa', padding: '15px', borderRadius: '5px' }}>
