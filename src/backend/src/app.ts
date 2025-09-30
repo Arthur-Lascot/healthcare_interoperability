@@ -23,7 +23,7 @@ app.use(express.json());
 
 //app.use("/api", user_routes);
 
-app.use(authMiddleware);
+app.use(authMiddleware)
 
 app.use("/api", file_routes);
 

@@ -1,88 +1,48 @@
 import { UUID } from "crypto";
 import { FileEntity } from "../entities/FileEntity";
 import { FileNotFoundError } from "../errors/FileNotFound";
+import { Pool } from "pg";
 
-const files: FileEntity[] = [
-  {
-    uuid: "11111111-1111-1111-1111-111111111111",
-    Code: 1,
-    classCodeDisplayName: "Laboratory Report",
-    LOINC: 12345,
-    typeCodeDisplayName: "PDF",
-    ReadableBy: [
-        true,
-        false,
-        true,
-        false,
-        true,
-        false,
-        true,
-        false,
-        true,
-        false,
-        true,
-        false,
-        true,
-        false,
-        true,
-        false,
-        true,
-        false,
-        true
-    ]
-  },
-  {
-    uuid: "11111111-1111-1111-1111-111111111112",
-    Code: 2,
-    classCodeDisplayName: "Radiology Report",
-    LOINC: 67890,
-    typeCodeDisplayName: "DICOM",
-    ReadableBy: [
-        false,
-        true,
-        false,
-        true,
-        false,
-        true,
-        false,
-        true,
-        false,
-        true,
-        false,
-        true,
-        false,
-        true,
-        false,
-        true,
-        false,
-        true,
-        false
-    ]
-  }
-];
+const pool = new Pool({
+  host: process.env.DB_HOST,
+  port: Number(process.env.DB_PORT),
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+});
 
-export const fileExist = (uuid: UUID): boolean => {
-    const file = files.find(f => f.uuid === uuid);
-    if (file)
-        return true;
-    return false;
-};
+export const getFileFromUUID = async (uuid: UUID): Promise<FileEntity> => {
+    const result = await pool.query(
+      "SELECT * FROM documents WHERE uuid = $1;",
+      [uuid]
+    );
 
-export const getFileFromUUID = (uuid: UUID): FileEntity => {
-    const file = files.find(f => f.uuid === uuid);
-
-    if (!file) {
+    if (result.rows.length === 0) {
         throw new FileNotFoundError(uuid);
     }
-
-    return file;
+    return result.rows[0];
 };
 
-export const getAllFiles = (): FileEntity[] => {
-    return files;
-}
+export const getAllFiles = async(): Promise<FileEntity[]> => {
+    const result = await pool.query(
+      "SELECT * FROM documents",
+    );
 
-export const createFile = (file: FileEntity): boolean => {
-    files.push(file);
-    return true;
+    return result.rows;
+};
+
+export const createFile = async (file: FileEntity): Promise<number> => {
+    const result = await pool.query(
+        `INSERT INTO documents (code, class_code_display_name, loinc, type_code_display_name, content)
+         VALUES ($1, $2, $3, $4, $5)
+         RETURNING uuid`,
+        [
+            file.code,
+            file.classCodeDisplayName,
+            file.loinc,
+            file.typeCodeDisplayName,
+            file.content || null
+        ]
+    );
+    return result.rows[0].uuid as number;
 }

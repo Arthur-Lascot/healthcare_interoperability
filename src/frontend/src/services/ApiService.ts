@@ -24,7 +24,7 @@ class ApiService {
   }
 
   async createFile(data: any, token: string): Promise<any> {
-    const response = await fetch(`${this.baseUrl}/file`, {
+    const response = await fetch(`${this.baseUrl}/document`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,

@@ -1,11 +1,10 @@
 import { UUID } from "crypto";
-import { FixedLengthArray } from "../models/FixedLengthArray";
 
 export type FileEntity = {
     uuid:                   UUID;
-    Code:                   number;
+    code:                   number;
     classCodeDisplayName:   string;
-    LOINC:                  number;
+    loinc:                  string;
     typeCodeDisplayName:    string;
-    ReadableBy:             FixedLengthArray<boolean, 19>;
+    content:                string;
 };
