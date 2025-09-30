@@ -43,6 +43,18 @@ Le système sépare : - Les **documents** (stockés en
     séparément sous forme de ressources FHIR (`Observation`).
 
 ## Lancer le projet en dev
+- Avoir les variables d'environnement suivantes :
+KEYCLOAK_ADMIN=admin
+KEYCLOAK_ADMIN_PASSWORD=admin
+KEYCLOAK_JWKS_URI=http://keycloak:8080/realms/healthcare/protocol/openid-connect/certs
+
+BACKEND_PORT=3002
+
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=motdepasse
+DB_NAME=document
 
 -   cd healthcare_interoperability
 -   docker-compose up -d
