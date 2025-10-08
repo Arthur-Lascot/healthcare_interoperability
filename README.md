@@ -1,5 +1,9 @@
 # Projet Santé -- Gestion et Interopérabilité des Documents
 
+## Auteur
+
+Arthur Oldrati et Gaetan Maronne
+
 ## Description
 
 Ce projet est une application web permettant : - La **consultation** et
