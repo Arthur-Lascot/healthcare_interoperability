@@ -17,6 +17,10 @@ Le système sépare : - Les **documents** (stockés en
 (stockées en ressources FHIR comme `Observation`,
 `MedicationStatement`...).
 
+## Diagramme de flux de donnée
+
+![DFD](https://github.com/user-attachments/assets/e4ebbe53-341e-4d0b-b95b-f6ecef81e1b1)
+
 ## Architecture
 
 -   **Frontend** : application web (auth, recherche, upload).
