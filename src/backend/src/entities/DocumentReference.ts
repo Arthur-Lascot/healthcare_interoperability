@@ -1,53 +1,51 @@
-import CodeableConcept from "../models/CodeableConcept";
-import Coding from "../models/Coding";
-import Context from "../models/Context";
+import codeableConcept from "../models/codeableConcept";
+import coding from "../models/coding";
+import context from "../models/context";
 import Identifier from "../models/Identifier";
 import Reference from "./Reference";
-import DocumentReferenceParams from "../models/DocumentReferenceParams";
+import documentReferenceParams from "../models/documentReferenceParams";
 import { ValidationError } from "../errors/AppError";
 
+const VALID_STATUS = ["current", "superseded", "entered-in-error"] as const;
+const VALID_DOCSTATUS = ["preliminary", "final", "amended", "entered-in-error"] as const;
+
+type DocumentReferenceStatus = typeof VALID_STATUS[number];
+type DocumentReferenceDocStatus = typeof VALID_DOCSTATUS[number];
+
 class DocumentReference {
-    readonly ressourceType!:                 String;
+    readonly resourceType!:                  string;
     readonly masterIdentifier?:              Identifier;
     readonly identifier?:                    Identifier[];
-    readonly status!:                        String;
-    readonly docstatus?:                     String;
-    readonly type?:                          CodeableConcept;
-    readonly category?:                      CodeableConcept[];
+    readonly status!:                        DocumentReferenceStatus;
+    readonly docStatus?:                     DocumentReferenceDocStatus;
+    readonly type?:                          codeableConcept;
+    readonly category?:                      codeableConcept[];
     readonly subject?:                       Reference;
     readonly date?:                          Date;
     readonly author?:                        Reference;
     readonly authenticator?:                 Reference;
     readonly custodian?:                     Reference;
-    readonly relatesTo?:                     {code: String, target: Reference}[];
-    readonly description?:                   String;
-    readonly securityLabel?:                 CodeableConcept[];
-    readonly content!:                       {attachment: undefined, format?: Coding}[];
-    readonly context?:                       Context;
+    readonly relatesTo?:                     {code: string, target: Reference}[];
+    readonly description?:                   string;
+    readonly securityLabel?:                 codeableConcept[];
+    readonly content!:                       {attachment: undefined, format?: coding}[];
+    readonly context?:                       context;
 
-    constructor(params: DocumentReferenceParams) {
+    constructor(params: documentReferenceParams) {
         Object.assign(this, params);
+        this.Validate();
+  }
 
-        if (this.status !== "current" && this.status !== "superseded" && this.status !== "entered-in-error") {
-            throw new ValidationError(`Status field is set with an incorrect value "${this.status}" 
-                when trying to initialise DocumentReference`);
-        }
+  private Validate() : void {
+    if (this.status && !VALID_STATUS.includes(this.status)) {
+        throw new ValidationError(`Error ininitialisation of DocumentReference: Invalid status value: "${this.status}". 
+                Valid values: ${VALID_STATUS.join(", ")}`);
+    }
 
-        if (this.docstatus) {
-            if (this.docstatus !== "preliminary" && this.docstatus !== "final" && this.docstatus !== "amended"
-                && this.docstatus !== "entered-in-error") {
-                throw new ValidationError(`DocStatus field is set with an incorrect value "${this.docstatus}" 
-                    when trying to initialise DocumentReference`);
-            }
-        }
-
-        if (this.relatesTo) {
-            for (const code in this.relatesTo)
-                if (code !== "replaces" && code !== "transforms" && code !== "signs" && code !== "appends") {
-                    throw new ValidationError(`Code field in relatesTo field is set with an incorrect value "${code}" 
-                        when trying to initialise DocumentReference`);
-                }
-        }
+    if (this.docStatus && !VALID_DOCSTATUS.includes(this.docStatus)) {
+        throw new ValidationError(`Error ininitialisation of DocumentReference: Invalid docStatus value: "${this.docStatus}". 
+                Valid values: ${VALID_DOCSTATUS.join(", ")}`);
+    }
   }
 }
 

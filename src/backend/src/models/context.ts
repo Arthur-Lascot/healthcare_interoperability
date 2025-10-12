@@ -1,15 +1,15 @@
 import Reference from "../entities/Reference"
-import CodeableConcept from "./CodeableConcept";
+import codeableConcept from "./codeableConcept";
 import Period from "./Period";
 
-type Context = {
+type context = {
     encounter?:              Reference[];
-    event?:                  CodeableConcept[];
+    event?:                  codeableConcept[];
     period?:                 Period;
-    facilityType?:           CodeableConcept;
-    practiceSetting?:        CodeableConcept;
+    facilityType?:           codeableConcept;
+    practiceSetting?:        codeableConcept;
     sourcePatientInfo?:      Reference;
     related?:                Reference[];
 }
 
-export default Context;
+export default context;
