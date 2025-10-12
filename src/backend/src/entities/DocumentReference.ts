@@ -1,23 +1,33 @@
 import codeableConcept from "../models/codeableConcept";
 import coding from "../models/coding";
-import context from "../models/context";
 import Identifier from "../models/Identifier";
 import Reference from "./Reference";
 import documentReferenceParams from "../models/documentReferenceParams";
 import { ValidationError } from "../errors/AppError";
+import Period from "../models/Period";
 
 const VALID_STATUS = ["current", "superseded", "entered-in-error"] as const;
 const VALID_DOCSTATUS = ["preliminary", "final", "amended", "entered-in-error"] as const;
 
-type DocumentReferenceStatus = typeof VALID_STATUS[number];
-type DocumentReferenceDocStatus = typeof VALID_DOCSTATUS[number];
+type documentReferenceStatus = typeof VALID_STATUS[number];
+type documentReferenceDocStatus = typeof VALID_DOCSTATUS[number];
+
+type context = {
+    encounter?:              Reference[];
+    event?:                  codeableConcept[];
+    period?:                 Period;
+    facilityType?:           codeableConcept;
+    practiceSetting?:        codeableConcept;
+    sourcePatientInfo?:      Reference;
+    related?:                Reference[];
+}
 
 class DocumentReference {
     readonly resourceType!:                  string;
     readonly masterIdentifier?:              Identifier;
     readonly identifier?:                    Identifier[];
-    readonly status!:                        DocumentReferenceStatus;
-    readonly docStatus?:                     DocumentReferenceDocStatus;
+    readonly status!:                        documentReferenceStatus;
+    readonly docStatus?:                     documentReferenceDocStatus;
     readonly type?:                          codeableConcept;
     readonly category?:                      codeableConcept[];
     readonly subject?:                       Reference;
@@ -33,6 +43,7 @@ class DocumentReference {
 
     constructor(params: documentReferenceParams) {
         Object.assign(this, params);
+        this.resourceType = "DocumentReference"
         this.Validate();
   }
 

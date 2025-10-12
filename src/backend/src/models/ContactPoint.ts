@@ -4,18 +4,18 @@ import Period from "./Period";
 const VALID_SYSTEMS = ["phone", "fax", "email", "pager", "url", "sms", "other"] as const;
 const VALID_USES = ["home", "work", "temp", "mobile", "old"] as const;
 
-type ContactPointSystem = typeof VALID_SYSTEMS[number];
-type ContactPointUse = typeof VALID_USES[number];
+type contactPointSystem = typeof VALID_SYSTEMS[number];
+type contactPointUse = typeof VALID_USES[number];
 
 class ContactPoint {
-    readonly system?:        ContactPointSystem;
+    readonly system?:        contactPointSystem;
     readonly value?:         string;
-    readonly use?:           ContactPointUse;
+    readonly use?:           contactPointUse;
     readonly rank?:          number;
     readonly period?:        Period;
 
     constructor(params: Partial<ContactPoint> = {}) {
-        Object.assign(this, {...params});
+        Object.assign(this, params);
         this.validate();
     }
 
