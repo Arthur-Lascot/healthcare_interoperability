@@ -43,7 +43,7 @@ class DocumentReference {
 
     constructor(params: documentReferenceParams) {
         Object.assign(this, params);
-        this.resourceType = "DocumentReference"
+        this.resourceType = "DocumentReference";
         this.Validate();
   }
 
