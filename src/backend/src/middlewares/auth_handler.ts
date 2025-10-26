@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import jwksClient from "jwks-rsa";
-import { Role } from "../models/Roles";
 
 const client = jwksClient({
   jwksUri: process.env.KEYCLOAK_JWKS_URI as string,
@@ -21,6 +20,7 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
   const authHeader = req.headers.authorization;
 
   if (!authHeader) {
+    req.log.info({path: req.path}, "Missing authorization header");
     return res.status(401).json({ error: "Missing authorization header" });
   }
 
@@ -28,11 +28,10 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
 
   jwt.verify(token, getKey, { algorithms: ["RS256"] }, (err, decoded: any) => {
     if (err) {
-      console.error("❌ Token not valid:", err);
+      req.log.warn({err, path: req.path}, "Token not valid");
       return res.status(401).json({ error: "Token not valid" });
     }
 
-    console.log("✅ Token décodé :", decoded);
     req.role = decoded.realm_access?.roles || [];
     next();
   });

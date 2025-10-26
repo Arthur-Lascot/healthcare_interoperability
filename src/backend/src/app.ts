@@ -4,6 +4,8 @@ import file_routes from "./routes/files.routes";
 import { authMiddleware } from "./middlewares/auth_handler";
 import { errorHandler } from "./middlewares/error_handler";
 import { NotFoundError } from "./errors/AppError";
+import { requestIdMiddleware } from "./middlewares/request_id";
+import pinoMiddleware from "./middlewares/pino_http";
 
 const app = express();
 
@@ -20,8 +22,8 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 app.use(express.json());
-
-//app.use("/api", user_routes);
+app.use(requestIdMiddleware);
+app.use(pinoMiddleware);
 
 app.use(authMiddleware)
 

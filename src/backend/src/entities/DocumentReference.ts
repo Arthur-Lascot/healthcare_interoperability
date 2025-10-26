@@ -12,7 +12,7 @@ const VALID_DOCSTATUS = ["preliminary", "final", "amended", "entered-in-error"] 
 type documentReferenceStatus = typeof VALID_STATUS[number];
 type documentReferenceDocStatus = typeof VALID_DOCSTATUS[number];
 
-type context = {
+export type context = {
     encounter?:              Reference[];
     event?:                  codeableConcept[];
     period?:                 Period;

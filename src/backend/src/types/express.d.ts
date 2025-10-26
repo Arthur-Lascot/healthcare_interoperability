@@ -5,3 +5,5 @@ declare module 'express-serve-static-core' {
     role?: Role;
   }
 }
+
+export {}

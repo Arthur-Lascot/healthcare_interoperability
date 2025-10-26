@@ -2,7 +2,7 @@ import Identifier from "./Identifier"
 import Reference from "../entities/Reference"
 import codeableConcept from "./codeableConcept"
 import coding from "./coding"
-import context from "./context"
+import { context } from "../entities/DocumentReference"
 
 type documentReferenceParams = {
     resourceType: string;
