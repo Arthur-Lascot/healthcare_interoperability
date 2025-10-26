@@ -6,6 +6,7 @@ import { errorHandler } from "./middlewares/error_handler";
 import { NotFoundError } from "./errors/AppError";
 import { requestIdMiddleware } from "./middlewares/request_id";
 import pinoMiddleware from "./middlewares/pino_http";
+import { alsMiddleware } from "./middlewares/als";
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(requestIdMiddleware);
 app.use(pinoMiddleware);
+app.use(alsMiddleware);
 
 app.use(authMiddleware)
 

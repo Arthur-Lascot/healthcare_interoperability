@@ -1,6 +1,6 @@
 import app from "./app";
 import { initDb } from "./db";
-import logger from "./logger";
+import logger from "./logger/logger";
 
 const PORT = process.env.BACKEND_PORT;
 

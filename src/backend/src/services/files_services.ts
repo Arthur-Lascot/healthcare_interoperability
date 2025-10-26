@@ -3,6 +3,8 @@ import { Role } from "../models/Roles"
 import { FileEntity } from "../entities/FileEntity"
 import rawHabilitation from "../habilitation_matrix.json"
 import { UUID } from "crypto";
+import { getLogger } from "../logger/loggerContext";
+
 
 const habilitation: Record<string, boolean[]> = rawHabilitation;
 
@@ -13,6 +15,9 @@ const isReadableBy = (file: FileEntity, role: Role,): boolean => {
 }
 
 export const getFile = async (role: Role, fileUUID: UUID): Promise<boolean> => {
+    const logger = getLogger();
+    logger.info(`getFile service entrypoint, role: ${role}, fileUUID: ${fileUUID}`);
+    
     const file: FileEntity = await FileRepository.getFileFromUUID(fileUUID);
     return isReadableBy(file, role);
 }

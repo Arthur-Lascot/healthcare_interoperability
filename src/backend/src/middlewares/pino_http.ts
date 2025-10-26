@@ -1,5 +1,5 @@
 import pinoHttp from "pino-http";
-import logger from "../logger";
+import logger from "../logger/logger";
 import { stdSerializers } from "pino";
 
 const pinoMiddleware = pinoHttp({
