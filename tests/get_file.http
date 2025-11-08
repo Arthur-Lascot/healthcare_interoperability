@@ -1,12 +1,12 @@
 ### Get token
-POST http://localhost:8080/realms/healthcare/protocol/openid-connect/token
+POST http://localhost:8080/realms/healthcare/protocol/openid-connect/token @getToken
 Content-Type: application/x-www-form-urlencoded
 
 client_id=myclient&grant_type=password&username=${TEST_USER_USERNAME}&password=${TEST_USER_PWD}
 
 > {% 
 // store access token in a variable for later requests
-token = get_token.response.body.access_token; 
+token = getToken.response.body.access_token; 
 %}
 
 ### Call protected route
