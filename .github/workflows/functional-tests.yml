@@ -30,8 +30,9 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install project dependencies
-        run: npm ci
+      - name: Install test dependencies
+        run: npm install
+        working-directory: tests/
 
       - name: Full cleanup (ensure fresh DB)
         run: |
