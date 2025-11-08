@@ -44,6 +44,13 @@ jobs:
       - name: Install httpyac
         run: npm install -g httpyac
 
+      - name: Wait for Keycloak to be ready
+        run: |
+          until curl -sSf http://localhost:8080/realms/healthcare; do
+            echo "Waiting for Keycloak..."
+            sleep 2
+          done
+          
       - name: Run HTTP tests
         run: httpyac test tests/ --all --verbose
 
