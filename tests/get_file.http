@@ -9,7 +9,18 @@ password=${TEST_USER_PWD}
 
 @token = {{ get_token.response.body.access_token }}
 
+### Get a document UUID
+GET http://localhost:3000/documents
+# @assert status == 200
+
+> {%
+const docs = JSON.parse(response.body);
+assert.ok(docs.length > 0, "No documents found");
+client.global.set("docUuid", docs[0].uuid); // récupère le premier UUID
+%}
+
 ### Call protected route
-GET http://localhost:8080/api/file/:uuid
+GET http://localhost:8080/api/file/{{docUuid}}
 Authorization: Bearer {{token}}
+# @assert status == 200
 

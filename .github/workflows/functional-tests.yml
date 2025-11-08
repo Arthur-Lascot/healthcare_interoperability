@@ -44,7 +44,7 @@ jobs:
         run: npm install -g httpyac
 
       - name: Run HTTP tests
-        run: httpyac test tests/
+        run: httpyac test tests/ --region "Get token" --verbose
 
       - name: Stop containers
         if: always()
