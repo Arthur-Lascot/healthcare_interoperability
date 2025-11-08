@@ -2,12 +2,12 @@
 POST http://localhost:8080/realms/healthcare/protocol/openid-connect/token
 Content-Type: application/x-www-form-urlencoded
 
-client_id=myclient
-grant_type=password
-username=${TEST_USER_USERNAME}
-password=${TEST_USER_PWD}
+client_id=myclient&grant_type=password&username=${TEST_USER_USERNAME}&password=${TEST_USER_PWD}
 
-@token = {{ get_token.response.body.access_token }}
+> {% 
+// store access token in a variable for later requests
+token = get_token.response.body.access_token; 
+%}
 
 ### Call protected route
 GET http://localhost:3002/api/file/11111111-1111-1111-1111-111111111111
