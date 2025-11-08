@@ -47,12 +47,13 @@ services:
     restart: always
     environment:
       POSTGRES_DB: document
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: motdepasse
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     networks:
       - app-network
     volumes:
       - pgdata:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d:ro
 
   python:
     build: ./python_app

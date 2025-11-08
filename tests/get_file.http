@@ -1,0 +1,15 @@
+### Get token
+POST http://localhost:8081/realms/healthcare/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+client_id=myclient
+grant_type=password
+username=${TEST_USER_USERNAME}
+password=${TEST_USER_PWD}
+
+@token = {{ get_token.response.body.access_token }}
+
+### Call protected route
+GET http://localhost:8080/api/file/:uuid
+Authorization: Bearer {{token}}
+

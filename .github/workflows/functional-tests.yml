@@ -1,0 +1,39 @@
+name: Functional HTTP Tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  http-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      
+      - name: Full cleanup (ensure fresh DB)
+        run: |
+          docker compose down -v || true
+          docker volume rm $(docker volume ls -q --filter name=_pgdata) || true
+          docker system prune --volumes -f || true
+
+      - name: Build and start Docker services
+        run: |
+          docker compose up -d --build
+          sleep 10
+
+      - name: Install httpyac
+        run: npm install -g httpyac
+
+      - name: Run HTTP tests
+        run: httpyac test tests/
+
+      - name: Stop containers
+        if: always()
+        run: docker compose down
