@@ -1,6 +1,8 @@
 const supertest = require('supertest');
 
 const API_BASE = 'http://localhost:8080';
+const TEST_USER_USERNAME = process.env.TEST_USER_USERNAME;
+const TEST_USER_PWD = process.env.TEST_USER_PWD;
 
 async function getToken() {
   const res = await supertest(API_BASE)

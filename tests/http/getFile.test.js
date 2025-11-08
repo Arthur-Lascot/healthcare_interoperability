@@ -1,6 +1,9 @@
 const supertest = require('supertest');
 const { API_BASE, getToken } = require('./helper');
 
+const TEST_USER_USERNAME = process.env.TEST_USER_USERNAME;
+const TEST_USER_PWD = process.env.TEST_USER_PWD;
+
 describe('GET /api/file/:uuid', () => {
   let token;
 
