@@ -36,6 +36,7 @@ jobs:
         run: |
           docker compose down -v || true
           docker volume rm $(docker volume ls -q --filter name=_pgdata) || true
+          docker volume rm healthcare_interoperability_pgdata || true
           docker system prune --volumes -f || true
 
       - name: Build and start Docker services
