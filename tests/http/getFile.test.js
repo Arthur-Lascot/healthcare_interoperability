@@ -1,5 +1,5 @@
-import supertest from'supertest';
-import { API_BASE, getToken } from './helper';
+const supertest = require('supertest');
+const { API_BASE, getToken } = require('./helper');
 
 describe('GET /api/file/:uuid', () => {
   let token;
