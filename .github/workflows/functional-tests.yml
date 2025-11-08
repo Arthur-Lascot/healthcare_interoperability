@@ -53,7 +53,8 @@ jobs:
           done
 
       - name: Run HTTP tests with Jest
-        run: npx jest --verbose
+        run: npx jest --config jest.config.js --verbose
+        working-directory: tests/
 
       - name: Stop containers
         if: always()
