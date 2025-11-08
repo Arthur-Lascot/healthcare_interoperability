@@ -18,8 +18,6 @@ jobs:
       KEYCLOAK_JWKS_URI: ${{ secrets.KEYCLOAK_JWKS_URI }}
       KEYCLOAK_ADMIN: ${{ secrets.KEYCLOAK_ADMIN }}
       KEYCLOAK_ADMIN_PASSWORD: ${{ secrets.KEYCLOAK_ADMIN_PASSWORD }}
-      TEST_USER_USERNAME: ${{ secrets.TEST_USER_USERNAME }}
-      TEST_USER_PWD: ${{ secrets.TEST_USER_PWD }}
 
     steps:
       - name: Checkout repository
@@ -55,6 +53,9 @@ jobs:
       - name: Run HTTP tests with Jest
         run: npx jest --config jest.config.js --verbose
         working-directory: tests/
+        env:
+          TEST_USER_USERNAME: ${{ secrets.TEST_USER_USERNAME }}
+          TEST_USER_PWD: ${{ secrets.TEST_USER_PWD }}
 
       - name: Stop containers
         if: always()
