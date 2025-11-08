@@ -5,6 +5,16 @@ on: [push, pull_request]
 jobs:
   start-services:
     runs-on: ubuntu-latest
+    env:
+      BACKEND_PORT: ${{ secrets.BACKEND_PORT }}
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      DB_HOST: ${{ secrets.DB_HOST }}
+      DB_PORT: ${{ secrets.DB_PORT }}
+      DB_NAME: ${{ secrets.DB_NAME }}
+      KEYCLOAK_JWKS_URI: ${{ secrets.KEYCLOAK_JWKS_URI }}
+      KEYCLOAK_ADMIN: ${{ secrets.KEYCLOAK_ADMIN }}
+      KEYCLOAK_ADMIN_PASSWORD: ${{ secrets.KEYCLOAK_ADMIN_PASSWORD }}
     outputs:
       backend-ready: ${{ steps.ready.outcome }}
     steps:
@@ -19,7 +29,7 @@ jobs:
         run: |
           until curl -sSf http://localhost:8080/realms/healthcare > /dev/null 2>&1; do echo waiting keycloak; sleep 2; done
       - name: Save docker state
-        run: docker save $(docker compose ps -q) -o /tmp/docker_state.tar
+        run: docker save $(docker compose images -q) -o /tmp/docker_state.tar
       - uses: actions/upload-artifact@v4
         with:
           name: docker_state
