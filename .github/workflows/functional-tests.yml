@@ -8,6 +8,19 @@ jobs:
   http-tests:
     runs-on: ubuntu-latest
 
+    env:
+      BACKEND_PORT: ${{ secrets.BACKEND_PORT }}
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      DB_HOST: ${{ secrets.DB_HOST }}
+      DB_PORT: ${{ secrets.DB_PORT }}
+      DB_NAME: ${{ secrets.DB_NAME }}
+      KEYCLOAK_JWKS_URI: ${{ secrets.KEYCLOAK_JWKS_URI }}
+      KEYCLOAK_ADMIN: ${{ secrets.KEYCLOAK_ADMIN }}
+      KEYCLOAK_ADMIN_PASSWORD: ${{ secrets.KEYCLOAK_ADMIN_PASSWORD }}
+      TEST_USER_USERNAME: ${{ secrets.TEST_USER_USERNAME }}
+      TEST_USER_PWD: ${{ secrets.TEST_USER_PWD }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
