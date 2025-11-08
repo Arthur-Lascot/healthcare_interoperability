@@ -1,10 +1,10 @@
 import { Pool } from "pg";
 
-const dbHost = process.env.DB_HOST || "localhost";
+const dbHost = process.env.DB_HOST;
 const dbPort = parseInt(process.env.DB_PORT || "5432", 10);
-const dbName = process.env.DB_NAME || "document";
-const dbUser = process.env.DB_USER || "postgres";
-const dbPassword = process.env.DB_PASSWORD || "motdepasse";
+const dbName = process.env.DB_NAME
+const dbUser = process.env.DB_USER
+const dbPassword = process.env.DB_PASSWORD
 
 export const pool = new Pool({
     host: dbHost,
@@ -13,6 +13,7 @@ export const pool = new Pool({
     user: dbUser,
     password: dbPassword,
 });
+
 
 export async function initDb(): Promise<void> {
   // Ensure table exists with correct schema. If an older schema exists (uuid type), migrate if empty.
@@ -70,6 +71,12 @@ export async function initDb(): Promise<void> {
       END IF;
     END$$;
   `);
-}
 
+  await pool.query(`
+    INSERT INTO documents (code, class_code_display_name, loinc, type_code_display_name, content)
+    VALUES 
+      (11111111-1111-1111-1111-111111111111, 1, 'Class A', '1234-5', 'Type X', '...'),
+      (2, 'Class B', '6789-0', 'Type Y', '...');
+  `);
+}
 

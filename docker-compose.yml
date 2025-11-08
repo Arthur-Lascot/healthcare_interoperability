@@ -58,7 +58,6 @@ services:
       - app-network
     volumes:
       - pgdata:/var/lib/postgresql/data
-      - ./db/init:/docker-entrypoint-initdb.d:ro
 
   python:
     build: ./python_app
