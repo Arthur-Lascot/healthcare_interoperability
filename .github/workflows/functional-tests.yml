@@ -29,7 +29,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-      
+
+     - name: Install project dependencies
+        run: npm ci
+
       - name: Full cleanup (ensure fresh DB)
         run: |
           docker compose down -v || true
@@ -41,18 +44,15 @@ jobs:
           docker compose up -d --build
           sleep 10
 
-      - name: Install httpyac
-        run: npm install -g httpyac
-
       - name: Wait for Keycloak to be ready
         run: |
           until curl -sSf http://localhost:8080/realms/healthcare; do
             echo "Waiting for Keycloak..."
             sleep 2
           done
-          
-      - name: Run HTTP tests
-        run: httpyac test tests/ --all --verbose
+
+      - name: Run HTTP tests with Jest
+        run: npx jest --verbose
 
       - name: Stop containers
         if: always()
