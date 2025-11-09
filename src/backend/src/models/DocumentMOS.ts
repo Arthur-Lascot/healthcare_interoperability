@@ -6,7 +6,7 @@ type Metadonnee = {
     creationDate?:                              Date;
     format?:                                    coding;
     status?:                                    string;
-    location:                                   string;
+    location?:                                  string;
     accessLogs?:                                undefined;
     rawFHIR?:                                   any;
 }

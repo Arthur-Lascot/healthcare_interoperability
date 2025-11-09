@@ -1,0 +1,23 @@
+import DocumentReference from "../../DTO/DocumentReference";
+import DocumentMOS from "../../models/DocumentMOS";
+import coding from "../structure/FHIR/coding";
+import Code from "../structure/MOS/Code";
+
+const DocumentReferenceToDocumentMOS = (document: DocumentReference): DocumentMOS => {
+    const format: coding = document.content[0].format || {};
+    const code: Code = new Code(format);
+
+    const metadata = {
+        author:         undefined,
+        creationDate:   document.date,
+        status:         document.status,
+        location:       undefined,
+        accessLogs:     undefined,
+        rawFHIR:        DocumentReference
+    };
+
+    const documentMOS: DocumentMOS = new DocumentMOS({typeDocument: code, meatdonnee: metadata});
+    return documentMOS;
+}
+
+export default DocumentReferenceToDocumentMOS;
