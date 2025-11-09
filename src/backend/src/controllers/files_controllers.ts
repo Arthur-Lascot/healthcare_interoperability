@@ -1,12 +1,11 @@
 import * as FileService from "../services/files_services"
-import { Role } from "../models/Roles";
+import { Role } from "../utils/structure/FHIR/Roles";
 import { ValidationError } from "../errors/AppError";
-import { FileEntity } from "../entities/FileEntity";
+import { FileEntity } from "../DTO/FileEntity";
 import { Request, Response } from "express";
 import { UUID } from "crypto";
 
-export const getFileController = async (req: Request, res: Response): Promise<Response> => {
-    req.log.info('getFileController entrypoint');
+export const getDocumentReferenceController = async (req: Request, res: Response): Promise<Response> => {
     
     if (!req.role) {
         req.log.warn({path: req.path}, 'No role found for user');
@@ -15,7 +14,7 @@ export const getFileController = async (req: Request, res: Response): Promise<Re
 
     const uuid: UUID = req.params.uuid as UUID;
     const role: Role = req.role;
-    const file: boolean = await FileService.getFile(role, uuid);
+    const file: boolean = await FileService.getDocumentReference(role, uuid);
 
     res.statusCode = 200;
     return res.json(file);

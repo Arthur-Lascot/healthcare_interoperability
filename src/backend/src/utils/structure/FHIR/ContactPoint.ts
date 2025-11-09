@@ -1,4 +1,4 @@
-import { ValidationError } from "../errors/AppError";
+import { ValidationError } from "../../../errors/AppError";
 import Period from "./Period";
 
 const VALID_SYSTEMS = ["phone", "fax", "email", "pager", "url", "sms", "other"] as const;

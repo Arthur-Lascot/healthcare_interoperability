@@ -1,10 +1,10 @@
-import codeableConcept from "../models/codeableConcept";
-import coding from "../models/coding";
-import Identifier from "../models/Identifier";
-import Reference from "./Reference";
-import documentReferenceParams from "../models/documentReferenceParams";
+import codeableConcept from "../utils/structure/FHIR/codeableConcept";
+import coding from "../utils/structure/FHIR/coding";
+import Identifier from "../utils/structure/FHIR/Identifier";
+import Reference from "../DTO/Reference";
+import documentReferenceParams from "../utils/structure/FHIR/documentReferenceParams";
 import { ValidationError } from "../errors/AppError";
-import Period from "../models/Period";
+import Period from "../utils/structure/FHIR/Period";
 
 const VALID_STATUS = ["current", "superseded", "entered-in-error"] as const;
 const VALID_DOCSTATUS = ["preliminary", "final", "amended", "entered-in-error"] as const;

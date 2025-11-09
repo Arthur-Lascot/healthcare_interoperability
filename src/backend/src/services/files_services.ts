@@ -1,6 +1,6 @@
 import * as FileRepository from "../repositories/file_repository"
-import { Role } from "../models/Roles"
-import { FileEntity } from "../entities/FileEntity"
+import { Role } from "../utils/structure/FHIR/Roles"
+import { FileEntity } from "../DTO/FileEntity"
 import rawHabilitation from "../habilitation_matrix.json"
 import { UUID } from "crypto";
 import { getLogger } from "../logger/loggerContext";
@@ -14,11 +14,8 @@ const isReadableBy = (file: FileEntity, role: Role,): boolean => {
     return accessList[role];
 }
 
-export const getFile = async (role: Role, fileUUID: UUID): Promise<boolean> => {
-    const logger = getLogger();
-    logger.info(`getFile service entrypoint, role: ${role}, fileUUID: ${fileUUID}`);
-    
-    const file: FileEntity = await FileRepository.getFileFromUUID(fileUUID);
+export const getDocumentReference = async (role: Role, fileUUID: UUID): Promise<boolean> => {    
+    const file: FileEntity = await FileRepository.getDocumentReferenceFromUUID(fileUUID);
     return isReadableBy(file, role);
 }
 

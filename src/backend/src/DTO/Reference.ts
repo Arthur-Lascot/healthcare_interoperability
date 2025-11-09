@@ -1,4 +1,4 @@
-import Identifier from "../models/Identifier";
+import Identifier from "../utils/structure/FHIR/Identifier";
 
 interface Reference {
     readonly reference?:        string;

@@ -1,10 +1,10 @@
 import { ValidationError } from "../errors/AppError";
-import Address from "../models/Address";
-import codeableConcept from "../models/codeableConcept";
-import ContactPoint from "../models/ContactPoint";
-import HumanName from "../models/HumanName";
-import Identifier from "../models/Identifier";
-import Period from "../models/Period";
+import Address from "../utils/structure/FHIR/Address";
+import codeableConcept from "../utils/structure/FHIR/codeableConcept";
+import ContactPoint from "../utils/structure/FHIR/ContactPoint";
+import HumanName from "../utils/structure/FHIR/HumanName";
+import Identifier from "../utils/structure/FHIR/Identifier";
+import Period from "../utils/structure/FHIR/Period";
 import Reference from "./Reference";
 
 const VALID_GENDERS = ["male", "female", "other", "unknown"] as const;

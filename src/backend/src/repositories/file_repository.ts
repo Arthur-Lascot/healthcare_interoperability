@@ -1,5 +1,5 @@
 import { UUID } from "crypto";
-import { FileEntity } from "../entities/FileEntity";
+import { FileEntity } from "../DTO/FileEntity";
 import { FileNotFoundError } from "../errors/FileNotFound";
 import { Pool } from "pg";
 
@@ -11,7 +11,7 @@ const pool = new Pool({
   database: process.env.DB_NAME,
 });
 
-export const getFileFromUUID = async (uuid: UUID): Promise<FileEntity> => {
+export const getDocumentReferenceFromUUID = async (uuid: UUID): Promise<FileEntity> => {
     const result = await pool.query(
       "SELECT * FROM documents WHERE uuid = $1;",
       [uuid]

@@ -1,4 +1,4 @@
-import { ValidationError } from "../errors/AppError";
+import { ValidationError } from "../../../errors/AppError";
 import codeableConcept from "./codeableConcept";
 import Period from "./Period";
 
