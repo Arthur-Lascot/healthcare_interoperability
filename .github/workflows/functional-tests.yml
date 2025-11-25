@@ -32,6 +32,9 @@ jobs:
         run: npm install
         working-directory: tests/
 
+      - name: Create temp directory for tests
+        run: mkdir -p tests/temp
+
       - name: Full cleanup (ensure fresh DB)
         run: |
           docker compose down -v || true

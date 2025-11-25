@@ -1,6 +1,7 @@
 const supertest = require('supertest');
 const { getToken, BACKEND_BASE } = require('./helper');
-const sharedState = require('./sharedState');
+const fs = require('fs');
+const path = require('path');
 
 describe('POST /api/document', () => {
   let token;
@@ -46,6 +47,9 @@ describe('POST /api/document', () => {
     expect(res.body).toHaveProperty('uuid');
     expect(res.body.uuid).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/);
 
-    sharedState.createdFileUuid = res.body.uuid;
+    const sharedState = { createdFileUuid: res.body.uuid };
+    const tempDir = path.join(__dirname, '../temp');
+    if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir, { recursive: true });
+    fs.writeFileSync(path.join(tempDir, 'shared.json'), JSON.stringify(sharedState));
   });
 });
