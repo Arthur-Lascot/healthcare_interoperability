@@ -1,5 +1,5 @@
 const supertest = require('supertest');
-const { API_BASE, getToken } = require('./helper');
+const { getToken, BACKEND_BASE } = require('./helper');
 const sharedState = require('./sharedState');
 
 describe('POST /api/document', () => {
@@ -37,7 +37,7 @@ describe('POST /api/document', () => {
       ]
     };
 
-    const res = await supertest(API_BASE)
+    const res = await supertest(BACKEND_BASE)
       .post('/api/document')
       .set('Authorization', `Bearer ${token}`)
       .send(documentReferencePayload);

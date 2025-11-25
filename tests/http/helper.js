@@ -1,6 +1,8 @@
 const supertest = require('supertest');
 
 const API_BASE = 'http://localhost:8080';
+const BACKEND_BASE = 'http://localhost:3002';
+
 const TEST_USER_USERNAME = process.env.TEST_USER_USERNAME;
 const TEST_USER_PWD = process.env.TEST_USER_PWD;
 
@@ -14,4 +16,4 @@ async function getToken() {
   return res.body.access_token;
 }
 
-module.exports = { API_BASE, getToken };
+module.exports = { BACKEND_BASE, getToken };
