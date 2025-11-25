@@ -1,5 +1,6 @@
 const supertest = require('supertest');
 const { API_BASE, getToken } = require('./helper');
+const sharedState = require('./sharedState');
 
 describe('GET /api/file/:uuid', () => {
   let token;
@@ -9,12 +10,15 @@ describe('GET /api/file/:uuid', () => {
   });
 
   test('should return 200 and correct JSON', async () => {
-    const uuid = '71e74502-bd9f-4d19-b8d9-8abbcdaf7453';
+    expect(sharedState.createdFileUuid).toBeDefined();
+    const uuid = sharedState.createdFileUuid;
+
     const res = await supertest(API_BASE)
       .get(`/api/file/${uuid}`)
       .set('Authorization', `Bearer ${token}`);
     
     expect(res.status).toBe(200);
+    expect(res.body).toBeInstanceOf(Object);
   });
 
   test('should return 404 for unknown UUID', async () => {

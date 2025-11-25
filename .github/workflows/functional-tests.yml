@@ -51,7 +51,7 @@ jobs:
           done
 
       - name: Run HTTP tests with Jest
-        run: npx jest --config jest.config.js --verbose
+        run: npx jest --config jest.config.js --verbose --runInBand
         working-directory: tests/
         env:
           TEST_USER_USERNAME: ${{ secrets.TEST_USER_USERNAME }}
