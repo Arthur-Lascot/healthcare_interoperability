@@ -1,9 +1,7 @@
 import * as FileRepository from "../repositories/file_repository"
 import { Role } from "../utils/structure/FHIR/Roles"
-import { FileEntity } from "../DTO/FileEntity"
 import rawHabilitation from "../habilitation_matrix.json"
 import { UUID } from "crypto";
-import { getLogger } from "../logger/loggerContext";
 import DocumentMOS from "../models/DocumentMOS";
 
 
@@ -31,6 +29,10 @@ export const getDocumentReference = async (role: Role, fileUUID: UUID): Promise<
     return accessibleFiles;
 }*/
 
-export const createFile = async (file: FileEntity): Promise<number> => {
-    return await FileRepository.createFile(file);
+export const createDocument = async (document: DocumentMOS): Promise<string> => {
+    const typeDocumentId = await FileRepository.insertMosCode(document);
+    const metadonneeId = await FileRepository.insertMetadonnees(document);
+    const documentId = await FileRepository.insertDocumentMos(typeDocumentId, metadonneeId);
+
+    return documentId;
 }

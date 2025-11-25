@@ -1,20 +1,13 @@
 import { UUID } from "crypto";
 import { FileEntity } from "../DTO/FileEntity";
 import { FileNotFoundError } from "../errors/FileNotFound";
-import { Pool } from "pg";
+import client from "../config/postgresClient";
 import DocumentMOS from "../models/DocumentMOS";
 import Code from "../utils/structure/MOS/Code";
 
-const pool = new Pool({
-  host: process.env.DB_HOST,
-  port: Number(process.env.DB_PORT),
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-});
 
 export const getDocumentReferenceFromUUID = async (uuid: UUID): Promise<DocumentMOS> => {
-    const result = await pool.query(
+    const result = await client.query(
       `SELECT 
         d.id AS document_id,
         c.valeur AS code_valeur,
@@ -54,25 +47,57 @@ export const getDocumentReferenceFromUUID = async (uuid: UUID): Promise<Document
 };
 
 export const getAllFiles = async(): Promise<FileEntity[]> => {
-    const result = await pool.query(
+    const result = await client.query(
       "SELECT * FROM documents",
     );
 
     return result.rows;
 };
 
-export const createFile = async (file: FileEntity): Promise<number> => {
-    const result = await pool.query(
-        `INSERT INTO documents (code, class_code_display_name, loinc, type_code_display_name, content)
-         VALUES ($1, $2, $3, $4, $5)
-         RETURNING uuid`,
-        [
-            file.code,
-            file.classCodeDisplayName,
-            file.loinc,
-            file.typeCodeDisplayName,
-            file.content || null
-        ]
-    );
-    return result.rows[0].uuid as number;
+export const insertMosCode = async (document: DocumentMOS): Promise<string> => {
+    const insertCodeQuery = `
+        INSERT INTO mos_code (valeur, libelle, langue, identifiant_nomenclature, nom_nomenclature, version_nomenclature, uri_nomenclature)
+        VALUES ($1, $2, $3, $4, $5, $6, $7)
+        RETURNING id;
+    `;
+    const insertCodeValues = [
+        document.typeDocument!.valeur,
+        document.typeDocument!.libelle,
+        document.typeDocument!.langue,
+        document.typeDocument!.identifiantNomenclature,
+        document.typeDocument!.nomNomenclature,
+        document.typeDocument!.versionNomenclature,
+        document.typeDocument!.URINomenclature
+    ];
+    const codeResult = await client.query(insertCodeQuery, insertCodeValues);
+    return codeResult.rows[0].id;;
+};
+
+export const insertMetadonnees = async (document: DocumentMOS): Promise<string> => {
+    const insertMetadonneeQuery = `
+        INSERT INTO mos_document_metadonnee (author, creation_date, status, location, access_logs, raw_fhir)
+        VALUES ($1, $2, $3, $4, $5, $6)
+        RETURNING id;
+    `;
+    const metadonneeValues = [
+        document.meatdonnee!.author,
+        document.meatdonnee!.creationDate,
+        document.meatdonnee!.status,
+        document.meatdonnee!.location,
+        document.meatdonnee!.accessLogs ? JSON.stringify(document.meatdonnee!.accessLogs) : null,
+        document.meatdonnee!.rawFHIR ? JSON.stringify(document.meatdonnee!.rawFHIR) : null
+    ];
+    const metadonneeResult = await client.query(insertMetadonneeQuery, metadonneeValues);
+    return metadonneeResult.rows[0].id;
 }
+
+export const insertDocumentMos = async (typeDocumentId: string, metadonneeId: string): Promise<string> => {
+    const insertDocumentQuery = `
+        INSERT INTO document_mos (type_document_id, metadonnee_id)
+        VALUES ($1, $2)
+        RETURNING id;
+    `;
+    const documentResult = await client.query(insertDocumentQuery, [typeDocumentId, metadonneeId])
+    return documentResult.rows[0].id;
+}
+

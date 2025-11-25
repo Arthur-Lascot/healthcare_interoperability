@@ -1,9 +1,10 @@
 import * as FileService from "../services/files_services"
 import { Role } from "../utils/structure/FHIR/Roles";
 import { ValidationError } from "../errors/AppError";
-import { FileEntity } from "../DTO/FileEntity";
 import { Request, Response } from "express";
 import { UUID } from "crypto";
+import DocumentReference from "../DTO/DocumentReference";
+import DocumentReferenceToDocumentMOS from "../utils/mapping/DocumentReferenceToDocumentMOS";
 
 export const getDocumentReferenceController = async (req: Request, res: Response): Promise<Response> => {
     
@@ -20,18 +21,15 @@ export const getDocumentReferenceController = async (req: Request, res: Response
     return res.json(file);
 }
 
-export const createFileController = async (req: any, res: any) => {
+export const createFileController = async (req: Request, res: Response): Promise<Response> => {
 
-    const body = req.body as Partial<FileEntity>;
-
-    if (!body || body.code === undefined || !body.classCodeDisplayName || body.loinc === undefined || !body.typeCodeDisplayName) {
-        throw new ValidationError("Missing or invalid fields in request body");
+    if (!req.body || Object.keys(req.body).length === 0) {
+        throw new ValidationError("Request body is empty or invalid");
     }
 
-    // content is optional, so we don't validate it
-
-    const newId = await FileService.createFile(body as FileEntity);
+    const documentReference = new DocumentReference(req.body);
+    const documentMOS = DocumentReferenceToDocumentMOS(documentReference);
     
-    res.statusCode = 201;
+    const newId = await FileService.createDocument(documentMOS);    
     return res.status(201).json({ status: "created", uuid: newId });
 }
