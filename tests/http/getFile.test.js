@@ -2,7 +2,7 @@ const supertest = require('supertest');
 const { API_BASE, getToken } = require('./helper');
 const sharedState = require('./sharedState');
 
-describe('GET /api/file/:uuid', () => {
+describe('GET /api/DocumentReference/:uuid', () => {
   let token;
 
   beforeAll(async () => {
@@ -14,7 +14,7 @@ describe('GET /api/file/:uuid', () => {
     const uuid = sharedState.createdFileUuid;
 
     const res = await supertest(API_BASE)
-      .get(`/api/file/${uuid}`)
+      .get(`/api/DocumentReference/${uuid}`)
       .set('Authorization', `Bearer ${token}`);
     
     expect(res.status).toBe(200);
