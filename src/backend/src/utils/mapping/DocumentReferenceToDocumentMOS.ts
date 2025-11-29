@@ -4,7 +4,7 @@ import coding from "../structure/FHIR/coding";
 import Code from "../structure/MOS/Code";
 
 const DocumentReferenceToDocumentMOS = (document: DocumentReference): DocumentMOS => {
-    const format: coding = document.content[0].format || {};
+    const format: coding = document.type!.coding![0] || {};
     const code: Code = new Code(format);
 
     const metadata = {

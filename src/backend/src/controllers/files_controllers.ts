@@ -5,6 +5,7 @@ import { Request, Response } from "express";
 import { UUID } from "crypto";
 import DocumentReference from "../DTO/DocumentReference";
 import DocumentReferenceToDocumentMOS from "../utils/mapping/DocumentReferenceToDocumentMOS";
+import DocumentMOS from "../models/DocumentMOS";
 
 export const getDocumentReferenceController = async (req: Request, res: Response): Promise<Response> => {
     
@@ -15,10 +16,10 @@ export const getDocumentReferenceController = async (req: Request, res: Response
 
     const uuid: UUID = req.params.uuid as UUID;
     const role: Role = req.role;
-    const file: boolean = await FileService.getDocumentReference(role, uuid);
+    const file: DocumentMOS = await FileService.getDocumentReference(role, uuid);
 
     res.statusCode = 200;
-    return res.json(file);
+    return res.json(file.meatdonnee?.rawFHIR);
 }
 
 export const createFileController = async (req: Request, res: Response): Promise<Response> => {

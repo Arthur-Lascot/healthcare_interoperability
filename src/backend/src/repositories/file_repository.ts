@@ -42,7 +42,6 @@ export const getDocumentReferenceFromUUID = async (uuid: UUID): Promise<Document
     const code: Code = new Code({code: row.code_valeur, display: row.code_libelle, system: row.code_identifiant_nomenclature, version: row.code_version_nomenclature}, row.code_langue);
     const metadonnee = {author: row.author, creationDate: row.creation_date, status: row.status, location: row.location, accessLogs: row.access_logs, rawFHIR: row.raw_fhir};
     const document: DocumentMOS = new DocumentMOS({typeDocument: code, meatdonnee: metadonnee});
-
     return document;
 };
 
