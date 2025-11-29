@@ -1,8 +1,10 @@
+import { FileFormData } from "../components/FileManagement";
+
 class ApiService {
   private baseUrl = 'http://localhost:3002/api';
 
   async getFile(uuid: string, token: string): Promise<any> {
-    const response = await fetch(`${this.baseUrl}/file/${uuid}`, {
+    const response = await fetch(`${this.baseUrl}/DocumentReference/${uuid}`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -23,14 +25,42 @@ class ApiService {
     return response.json();
   }
 
-  async createFile(data: any, token: string): Promise<any> {
+  async createFile(data: FileFormData, token: string): Promise<any> {
+    const documentReferencePayload = {
+      status: "current",
+      type: {
+        coding: [
+          {
+            system: "http://loinc.org",
+            code: data.code,
+            display: data.display
+          }
+        ]
+      },
+      subject: {
+        reference: "Patient/12345"
+      },
+      author: {
+        reference: "Practitioner/67890"
+      },
+      content: [
+        {
+          attachment: {
+            contentType: "application/pdf",
+            data: undefined
+          }
+        }
+      ]
+    };
+
     const response = await fetch(`${this.baseUrl}/document`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(data),
+      
+      body: JSON.stringify(documentReferencePayload),
     });
 
     if (!response.ok) {

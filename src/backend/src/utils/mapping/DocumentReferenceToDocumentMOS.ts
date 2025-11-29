@@ -13,7 +13,7 @@ const DocumentReferenceToDocumentMOS = (document: DocumentReference): DocumentMO
         status:         document.status,
         location:       undefined,
         accessLogs:     undefined,
-        rawFHIR:        DocumentReference
+        rawFHIR:        document
     };
 
     const documentMOS: DocumentMOS = new DocumentMOS({typeDocument: code, meatdonnee: metadata});

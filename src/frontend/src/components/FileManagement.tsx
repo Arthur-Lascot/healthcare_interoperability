@@ -2,12 +2,9 @@ import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import ApiService from '../services/ApiService';
 
-interface FileFormData {
-  code: number;
-  classCodeDisplayName: string;
-  loinc: string;
-  typeCodeDisplayName: string;
-  content: string;
+export interface FileFormData {
+  code: string;
+  display: string;
 }
 
 const FileManagement: React.FC = () => {
@@ -18,11 +15,8 @@ const FileManagement: React.FC = () => {
   
   // Form data for creating files
   const [formData, setFormData] = useState<FileFormData>({
-    code: 0,
-    classCodeDisplayName: '',
-    loinc: '',
-    typeCodeDisplayName: '',
-    content: ''
+    code: '34133-9',
+    display: ''
   });
   
   // Search data
@@ -49,8 +43,8 @@ const FileManagement: React.FC = () => {
       }
 
       // Validate required fields
-      if (!formData.classCodeDisplayName || !formData.loinc || !formData.typeCodeDisplayName) {
-        throw new Error('Tous les champs obligatoires doivent être remplis');
+      if (!formData.display) {
+        throw new Error('Le champ Display est obligatoire');
       }
 
       const result = await ApiService.createFile(formData, token);
@@ -58,11 +52,8 @@ const FileManagement: React.FC = () => {
       
       // Reset form
       setFormData({
-        code: 0,
-        classCodeDisplayName: '',
-        loinc: '',
-        typeCodeDisplayName: '',
-        content: ''
+        code: '34133-9',
+        display: ''
       });
     } catch (error) {
       setMessage({ 
@@ -165,7 +156,7 @@ const FileManagement: React.FC = () => {
               Code (obligatoire):
             </label>
             <input
-              type="number"
+              type="text"
               name="code"
               value={formData.code}
               onChange={handleInputChange}
@@ -182,12 +173,12 @@ const FileManagement: React.FC = () => {
 
           <div style={{ marginBottom: '15px' }}>
             <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-              Nom d'affichage de la classe (obligatoire):
+              Display (obligatoire):
             </label>
             <input
               type="text"
-              name="classCodeDisplayName"
-              value={formData.classCodeDisplayName}
+              name="display"
+              value={formData.display}
               onChange={handleInputChange}
               required
               style={{
@@ -196,66 +187,6 @@ const FileManagement: React.FC = () => {
                 border: '1px solid #ddd',
                 borderRadius: '4px',
                 fontSize: '14px'
-              }}
-            />
-          </div>
-
-          <div style={{ marginBottom: '15px' }}>
-            <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-              LOINC (obligatoire):
-            </label>
-            <input
-              type="text"
-              name="loinc"
-              value={formData.loinc}
-              onChange={handleInputChange}
-              required
-              style={{
-                width: '100%',
-                padding: '8px',
-                border: '1px solid #ddd',
-                borderRadius: '4px',
-                fontSize: '14px'
-              }}
-            />
-          </div>
-
-          <div style={{ marginBottom: '15px' }}>
-            <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-              Nom d'affichage du type (obligatoire):
-            </label>
-            <input
-              type="text"
-              name="typeCodeDisplayName"
-              value={formData.typeCodeDisplayName}
-              onChange={handleInputChange}
-              required
-              style={{
-                width: '100%',
-                padding: '8px',
-                border: '1px solid #ddd',
-                borderRadius: '4px',
-                fontSize: '14px'
-              }}
-            />
-          </div>
-
-          <div style={{ marginBottom: '20px' }}>
-            <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-              Contenu (optionnel):
-            </label>
-            <textarea
-              name="content"
-              value={formData.content}
-              onChange={handleInputChange}
-              rows={4}
-              style={{
-                width: '100%',
-                padding: '8px',
-                border: '1px solid #ddd',
-                borderRadius: '4px',
-                fontSize: '14px',
-                resize: 'vertical'
               }}
             />
           </div>
@@ -331,7 +262,7 @@ const FileManagement: React.FC = () => {
               borderRadius: '4px',
               border: '1px solid #dee2e6'
             }}>
-              <h4>Résultat de la recherche:</h4>
+              <h4>Contenu du fichier FHIR:</h4>
               <pre style={{ 
                 backgroundColor: '#f8f9fa', 
                 padding: '10px', 
