@@ -25,6 +25,26 @@ class ApiService {
     return response.json();
   }
 
+  async getDocumentReferences(token: string): Promise<any> {
+    const response = await fetch(`${this.baseUrl}/DocumentReferences`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      if (response.status === 401) {
+        throw new Error('Non autorisé - Vérifiez votre authentification');
+      } else {
+        throw new Error(`Erreur ${response.status}: ${response.statusText}`);
+      }
+    }
+
+    return response.json();
+  }
+
   async createFile(data: FileFormData, token: string): Promise<any> {
     const documentReferencePayload = {
       status: "current",

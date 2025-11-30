@@ -5,6 +5,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import LoadingSpinner from './components/LoadingSpinner';
 import LoginPage from './pages/LoginPage';
 import HomePage from './pages/HomePage';
+import DocumentReferencesPage from './pages/DocumentReferencesPage';
 
 const AppRoutes: React.FC = () => {
   const { loading, authenticated } = useAuth();
@@ -17,10 +18,10 @@ const AppRoutes: React.FC = () => {
     <Routes>
       <Route 
         path="/login" 
-        element={authenticated ? <Navigate to="/" replace /> : <LoginPage />} 
+        element={authenticated ? <Navigate to="/home" replace /> : <LoginPage />} 
       />
       <Route 
-        path="/" 
+        path="/home" 
         element={
           <ProtectedRoute>
             <HomePage />
@@ -28,8 +29,20 @@ const AppRoutes: React.FC = () => {
         } 
       />
       <Route 
+        path="/document-references"
+        element={
+          <ProtectedRoute>
+            <DocumentReferencesPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route 
+        path="/" 
+        element={<Navigate to="/home" replace />} 
+      />
+      <Route 
         path="*" 
-        element={<Navigate to="/" replace />} 
+        element={<Navigate to="/home" replace />} 
       />
     </Routes>
   );

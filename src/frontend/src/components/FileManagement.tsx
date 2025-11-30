@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import ApiService from '../services/ApiService';
 
@@ -130,6 +131,17 @@ const FileManagement: React.FC = () => {
         >
           Rechercher un Fichier
         </button>
+        <Link to="/document-references" style={{
+            padding: '10px 20px',
+            border: 'none',
+            backgroundColor: 'transparent',
+            color: '#333',
+            cursor: 'pointer',
+            textDecoration: 'none',
+            borderBottom: '2px solid transparent'
+          }}>
+          Lister les Documents
+        </Link>
       </div>
 
       {/* Message Display */}

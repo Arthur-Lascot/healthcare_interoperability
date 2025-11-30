@@ -4,7 +4,7 @@ import Resource from "./Resource";
 
 
 const VALID_TYPE = ['document', 'message' ,'transaction', 'transaction-response', 'batch', 'batch-response', 'history', 'searchset', 'collection'] as const;
-const VALID_MODE = ['macth', 'include', 'outcome']
+const VALID_MODE = ['match', 'include', 'outcome']
 
 type bundleType = typeof VALID_TYPE[number];
 type searchMode = typeof VALID_MODE[number];
