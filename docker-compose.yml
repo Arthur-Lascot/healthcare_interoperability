@@ -20,8 +20,14 @@ services:
       - "3002:3002"
     environment:
       KEYCLOAK_URL: http://keycloak:8080
-    env_file:
-      - .env
+      KEYCLOAK_JWKS_URI: ${KEYCLOAK_JWKS_URI}
+      BACKEND_PORT: ${BACKEND_PORT}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${DB_NAME}
+
     depends_on:
       - keycloak
       - db
@@ -35,7 +41,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      REACT_APP_BACKEND_URL: http://localhost:3002
+      REACT_APP_BACKEND_URL: http://localhost:${BACKEND_PORT}
       REACT_APP_KEYCLOAK_URL: http://localhost:8080
     depends_on:
       - keycloak
@@ -47,12 +53,13 @@ services:
     restart: always
     environment:
       POSTGRES_DB: document
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: motdepasse
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     networks:
       - app-network
     volumes:
       - pgdata:/var/lib/postgresql/data
+      - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
 
   python:
     build: ./python_app

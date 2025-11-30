@@ -4,13 +4,17 @@ import file_routes from "./routes/files.routes";
 import { authMiddleware } from "./middlewares/auth_handler";
 import { errorHandler } from "./middlewares/error_handler";
 import { NotFoundError } from "./errors/AppError";
+import { requestIdMiddleware } from "./middlewares/request_id";
+import pinoMiddleware from "./middlewares/pino_http";
+import { alsMiddleware } from "./middlewares/als";
 
 const app = express();
 
 const corsOptions = {
   origin: [
     'http://localhost:3000',
-    'http://frontend:3000'
+    'http://frontend:3000',
+    'http://localhost:3002' // Add this line to allow requests from port 3002
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
@@ -20,8 +24,9 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 app.use(express.json());
-
-//app.use("/api", user_routes);
+app.use(requestIdMiddleware);
+app.use(pinoMiddleware);
+app.use(alsMiddleware);
 
 app.use(authMiddleware)
 

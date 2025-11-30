@@ -1,8 +1,9 @@
-// src/types/express.d.ts
-import { Role } from "../models/Roles";
+import { Role } from "../utils/structure/FHIR/Roles";
 
 declare module 'express-serve-static-core' {
   interface Request {
     role?: Role;
   }
 }
+
+export {}

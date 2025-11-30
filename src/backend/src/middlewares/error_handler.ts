@@ -8,6 +8,8 @@ export const errorHandler = (
   next: NextFunction
 ) => {
   if (err instanceof AppError) {
+    req.log.warn({ err, path: req.path }, "AppError");
+    res.statusCode = err.statusCode;
     return res.status(err.statusCode).json({
       status: 'error',
       message: err.message,
@@ -16,6 +18,8 @@ export const errorHandler = (
   }
 
   if (err.name === 'JsonWebTokenError') {
+    req.log.warn({ err, path: req.path }, "JsonWebTokenError");
+    res.statusCode = 401;
     return res.status(401).json({
       status: 'error',
       message: 'Invalid token'
@@ -23,14 +27,16 @@ export const errorHandler = (
   }
 
   if (err.name === 'TokenExpiredError') {
+    req.log.warn({ err, path: req.path }, "TokenExpiredError");
+    res.statusCode = 401;
     return res.status(401).json({
       status: 'error',
       message: 'Token expired'
     });
   }
 
-  console.error('Unexpected error:', err);
-  
+  req.log.error({ err, path: req.path }, "Unexpected error");
+  res.statusCode = 500;
   return res.status(500).json({
     status: 'error',
     message: err.message, ...{ stack: err.stack }

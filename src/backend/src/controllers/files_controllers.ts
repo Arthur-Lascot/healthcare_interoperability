@@ -1,32 +1,56 @@
 import * as FileService from "../services/files_services"
-import { Role } from "../models/Roles";
+import { Role } from "../utils/structure/FHIR/Roles";
 import { ValidationError } from "../errors/AppError";
-import { FileEntity } from "../entities/FileEntity";
 import { Request, Response } from "express";
 import { UUID } from "crypto";
+import DocumentReference from "../DTO/DocumentReference";
+import DocumentReferenceToDocumentMOS from "../utils/mapping/DocumentReferenceToDocumentMOS";
+import DocumentMOS from "../models/DocumentMOS";
+import Bundle from "../DTO/Bundle";
 
-export const getFileController = async (req: Request, res: Response): Promise<Response> => {
-    if (!req.role)
-        throw new ValidationError("No role found for user")
+export const getDocumentReferenceController = async (req: Request, res: Response): Promise<Response> => {
+    
+    if (!req.role) {
+        req.log.warn({path: req.path}, 'No role found for user');
+        throw new ValidationError("No role found for user");
+    }
 
     const uuid: UUID = req.params.uuid as UUID;
     const role: Role = req.role;
-    const file: boolean = await FileService.getFile(role, uuid);
+    const file: DocumentMOS = await FileService.getDocumentReference(role, uuid);
 
-    return res.json(file);
+    res.statusCode = 200;
+    return res.json(file.meatdonnee?.rawFHIR);
 }
 
-export const createFileController = async (req: any, res: any) => {
-
-    const body = req.body as Partial<FileEntity>;
-
-    if (!body || body.code === undefined || !body.classCodeDisplayName || body.loinc === undefined || !body.typeCodeDisplayName) {
-        throw new ValidationError("Missing or invalid fields in request body");
+export const getDocumentReferencesController = async (req: Request, res: Response): Promise<Response> => {
+    if (!req.role) {
+        req.log.warn({path: req.path}, 'No role found for user');
+        throw new ValidationError("No role found for user");
     }
 
-    // content is optional, so we don't validate it
+    const role: Role = req.role;
+    const files: DocumentMOS[] = await FileService.getAllAccessibleFile(role);
+    const bundle = new Bundle(
+        {
+            type: "searchset", 
+            entry: files.map(file => {return { resource: file.meatdonnee?.rawFHIR , search: {mode: "match", score: 1}}}),
+            total: files.length,
+            timestamp: new Date()
+    });
+    res.statusCode = 200;
+    return res.json(bundle);
+}
 
-    const newId = await FileService.createFile(body as FileEntity);
+export const createFileController = async (req: Request, res: Response): Promise<Response> => {
 
+    if (!req.body || Object.keys(req.body).length === 0) {
+        throw new ValidationError("Request body is empty or invalid");
+    }
+
+    const documentReference = new DocumentReference(req.body);
+    const documentMOS = DocumentReferenceToDocumentMOS(documentReference);
+    
+    const newId = await FileService.createDocument(documentMOS);    
     return res.status(201).json({ status: "created", uuid: newId });
 }
