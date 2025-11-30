@@ -4,7 +4,9 @@ import { asyncHandler } from "../middlewares/async_handler";
 
 const router = Router();
 
-router.get("/DocumentReference/:uuid", asyncHandler(FileController.getDocumentReferenceController)); 
+router.get("/DocumentReference/:uuid", asyncHandler(FileController.getDocumentReferenceController));
+
+router.get("/DocumentReferences", asyncHandler(FileController.getDocumentReferencesController));
 
 router.post("/document", asyncHandler(FileController.createFileController));
 

@@ -5,6 +5,7 @@ import Reference from "../DTO/Reference";
 import documentReferenceParams from "../utils/structure/FHIR/documentReferenceParams";
 import { ValidationError } from "../errors/AppError";
 import Period from "../utils/structure/FHIR/Period";
+import Resource from "./Resource";
 
 const VALID_STATUS = ["current", "superseded", "entered-in-error"] as const;
 const VALID_DOCSTATUS = ["preliminary", "final", "amended", "entered-in-error"] as const;
@@ -22,8 +23,7 @@ export type context = {
     related?:                Reference[];
 }
 
-class DocumentReference {
-    readonly resourceType!:                  string;
+class DocumentReference extends Resource<"DocumentReference"> {
     readonly masterIdentifier?:              Identifier;
     readonly identifier?:                    Identifier[];
     readonly status!:                        documentReferenceStatus;
@@ -42,8 +42,8 @@ class DocumentReference {
     readonly context?:                       context;
 
     constructor(params: documentReferenceParams) {
+        super('DocumentReference')
         Object.assign(this, params);
-        this.resourceType = "DocumentReference";
         this.Validate();
   }
 

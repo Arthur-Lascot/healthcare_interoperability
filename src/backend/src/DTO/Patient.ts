@@ -6,6 +6,7 @@ import codeableConcept from "../utils/structure/FHIR/codeableConcept";
 import Reference from "./Reference";
 import Period from "../utils/structure/FHIR/Period";
 import { ValidationError } from "../errors/AppError";
+import Resource from "./Resource";
 
 const VALID_GENDERS = ["male", "female", "other", "unknown"] as const;
 const VALID_TYPES = ["replaced-by", "replaces", "refer", "seealso"] as const;
@@ -33,8 +34,7 @@ type link = {
     type:                      linkType;
 }
 
-class Patient {
-    resourceType!:              string;
+class Patient extends Resource<"Patient"> {
     identifier?:                Identifier;
     active?:                    boolean;
     name?:                      HumanName[];
@@ -55,8 +55,8 @@ class Patient {
     link?:                      link[];
 
     constructor(params: Partial<Patient> = {}) {
+        super('Patient');
         Object.assign(this, params);
-        this.resourceType = "Patient";
         this.Validate();
     }
 

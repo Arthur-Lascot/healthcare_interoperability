@@ -45,12 +45,38 @@ export const getDocumentReferenceFromUUID = async (uuid: UUID): Promise<Document
     return document;
 };
 
-export const getAllFiles = async(): Promise<FileEntity[]> => {
+export const getAllFiles = async(): Promise<DocumentMOS[]> => {
     const result = await client.query(
-      "SELECT * FROM documents",
+      `SELECT 
+        d.id AS document_id,
+        c.valeur AS code_valeur,
+        c.libelle AS code_libelle,
+        c.langue AS code_langue,
+        c.identifiant_nomenclature AS code_identifiant_nomenclature,
+        c.nom_nomenclature AS code_nom_nomenclature,
+        c.version_nomenclature AS code_version_nomenclature,
+        c.uri_nomenclature AS code_uri_nomenclature,
+        c.identifiant_agence AS code_identifiant_agence,
+        c.nom_agence AS code_nom_agence,
+        m.id AS metadonnee_id,
+        m.author,
+        m.creation_date,
+        m.status,
+        m.location,
+        m.access_logs,
+        m.raw_fhir
+      FROM document_mos d
+      LEFT JOIN mos_code c ON d.type_document_id = c.id
+      LEFT JOIN mos_document_metadonnee m ON d.metadonnee_id = m.id`,
     );
 
-    return result.rows;
+    let documents :DocumentMOS[] = [];
+    for (const row of result.rows) {
+        const code: Code = new Code({code: row.code_valeur, display: row.code_libelle, system: row.code_identifiant_nomenclature, version: row.code_version_nomenclature}, row.code_langue);
+        const metadonnee = {author: row.author, creationDate: row.creation_date, status: row.status, location: row.location, accessLogs: row.access_logs, rawFHIR: row.raw_fhir};
+        documents.push(new DocumentMOS({typeDocument: code, meatdonnee: metadonnee}));
+    }
+    return documents;
 };
 
 export const insertMosCode = async (document: DocumentMOS): Promise<string> => {

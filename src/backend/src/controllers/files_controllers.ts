@@ -6,6 +6,7 @@ import { UUID } from "crypto";
 import DocumentReference from "../DTO/DocumentReference";
 import DocumentReferenceToDocumentMOS from "../utils/mapping/DocumentReferenceToDocumentMOS";
 import DocumentMOS from "../models/DocumentMOS";
+import Bundle from "../DTO/Bundle";
 
 export const getDocumentReferenceController = async (req: Request, res: Response): Promise<Response> => {
     
@@ -20,6 +21,25 @@ export const getDocumentReferenceController = async (req: Request, res: Response
 
     res.statusCode = 200;
     return res.json(file.meatdonnee?.rawFHIR);
+}
+
+export const getDocumentReferencesController = async (req: Request, res: Response): Promise<Response> => {
+    if (!req.role) {
+        req.log.warn({path: req.path}, 'No role found for user');
+        throw new ValidationError("No role found for user");
+    }
+
+    const role: Role = req.role;
+    const files: DocumentMOS[] = await FileService.getAllAccessibleFile(role);
+    const bundle = new Bundle(
+        {
+            type: "searchset", 
+            entry: files.map(file => {return { resource: file.meatdonnee?.rawFHIR , search: {mode: "match", score: 1}}}),
+            total: files.length,
+            timestamp: new Date()
+    });
+    res.statusCode = 200;
+    return res.json(bundle);
 }
 
 export const createFileController = async (req: Request, res: Response): Promise<Response> => {

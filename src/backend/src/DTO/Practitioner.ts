@@ -6,6 +6,8 @@ import HumanName from "../utils/structure/FHIR/HumanName";
 import Identifier from "../utils/structure/FHIR/Identifier";
 import Period from "../utils/structure/FHIR/Period";
 import Reference from "./Reference";
+import Resource from "./Resource";
+
 
 const VALID_GENDERS = ["male", "female", "other", "unknown"] as const;
 
@@ -18,8 +20,7 @@ type qualification = {
     issuer?:                                    Reference;
 }
 
-class Practitioner {
-    readonly resourceType!:                     string;
+class Practitioner extends Resource<"Practitioner"> {
     readonly identifier?:                       Identifier[];
     readonly active?:                           boolean;
     readonly name?:                             HumanName[];
@@ -32,8 +33,8 @@ class Practitioner {
     readonly communication?:                    codeableConcept[];
 
     constructor(params: Partial<Practitioner>) {
+        super('Practitioner');
         Object.assign(this, params);
-        this.resourceType = "Practitioner";
         this.Validate();
     }
 

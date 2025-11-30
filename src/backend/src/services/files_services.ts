@@ -2,7 +2,6 @@ import * as FileRepository from "../repositories/file_repository"
 import { Role } from "../utils/structure/FHIR/Roles"
 import rawHabilitation from "../habilitation_matrix.json"
 import { UUID } from "crypto";
-import { asyncLocalStorage } from "../middlewares/als";
 import DocumentMOS from "../models/DocumentMOS";
 import { ForbiddenError } from "../errors/AppError";
 
@@ -27,12 +26,12 @@ export const getDocumentReference = async (role: Role, fileUUID: UUID): Promise<
     return document;
 }
 
-/*export const getAllAccessibleFile = async (role: Role): Promise<FileEntity[]> => {
-    const files: FileEntity[] = await FileRepository.getAllFiles();
-    let accessibleFiles: FileEntity[] = [];
-    files.forEach((f: FileEntity) => { if (isReadableBy(f, role)) {accessibleFiles.push(f)} })
+export const getAllAccessibleFile = async (role: Role): Promise<DocumentMOS[]> => {
+    const files: DocumentMOS[] = await FileRepository.getAllFiles();
+    let accessibleFiles: DocumentMOS[] = [];
+    files.forEach((f: DocumentMOS) => { if (isReadableBy(f, role)) {accessibleFiles.push(f)} })
     return accessibleFiles;
-}*/
+}
 
 export const createDocument = async (document: DocumentMOS): Promise<string> => {
     const typeDocumentId = await FileRepository.insertMosCode(document);
