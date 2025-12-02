@@ -64,3 +64,48 @@ Le système gére :
 -   cd healthcare_interoperability
 -   docker-compose up -d
 -   se connecter au front sur le port http://localhost:3000
+
+## Utilisation de L'IA
+
+- Le frontend n'ayant pas été jugé comme le point important de ce projet a été majoritairement généré sauf pour s'assurer que la communication des formulaires soit bien en FHIR.
+- Pour le backend voici une requête que j'ai faites pour comprendre comment réellement implémenté le MOS (au-delà de la structure présente dans la documentation officielle) :
+  - **Question :** Vis à vis de MOS la classe Document est définis tel quel :  
+    Nom Description typeDocument : [0..1] Code Type de document. meatdonnee : [0..1] Metadonnee Informations relatives à la gestion des classes et des données.  
+    Je me demande comment comprendre meatdonnée dans le context du MOS
+  - **Réponse :** Dans le MOS, métadonnée = tout ce qui décrit le document sans être son contenu.
+
+    Typiquement :
+
+    - titre  
+    - auteur / producteur  
+    - date de création  
+    - date de modification  
+    - format (PDF, CDA, image…)  
+    - taille  
+    - statut (validé, archivé, annulé…)  
+    - identifiants techniques  
+    - droits / confidentialité  
+    - localisation du fichier  
+
+    En MOS, la métadonnée sert surtout à gérer le document (cycle de vie, archivage, contexte), alors que typeDocument décrit ce que le document est.
+
+    Si tu veux, je peux faire un parallèle direct : FHIR DocumentReference → MOS metadonnee.
+
+  - **Question :** La question est : les métadonnées sont elles standardisées ou l'implémentation est au choix ?
+  - **Réponse :** Elles ne sont pas totalement standardisées : le MOS définit le concept de métadonnée, mais pas une liste figée et obligatoire.
+
+    👉 Le contenu exact des métadonnées dépend donc de ton implémentation, tant que tu restes cohérent avec le modèle MOS.
+
+    **Ce qui est standardisé :**
+    - Le fait qu’un document possède un bloc “métadonnée”.
+    - Le rôle général : décrire et gérer le document (cycle de vie, contexte, infos techniques).
+
+    **Ce qui n’est pas standardisé :**
+    - La liste précise des champs.
+    - Le niveau de détail.
+    - Le vocabulaire utilisé.
+
+    Chaque éditeur choisit comment remplir cette structure tant que ça respecte le cadre logique du MOS.
+
+    **Bonne pratique**  
+    S’inspirer de modèles déjà normalisés (par ex. les champs de DocumentReference côté FHIR) pour que ton bloc “métadonnée” reste cohérent, lisible, et interopérable.
