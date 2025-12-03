@@ -1,0 +1,16 @@
+Quel format est recommandé par l’ANS pour le stockage des documents ?
+Les formats recommandés sont le cda pour les documents cliniques
+
+Quelles autres solutions interopérables connaissez-vous ?
+Dicom pour les images
+
+Focalisons nous sur FHIR. Quelles ressources seront nécessaires?(Vous trouverez les guides d’implémentation FHIR ici)
+patient, documentreference, practitioner, appointement, reference, bundle, servicerequest, observation, diagnostic report
+
+openEHR dispose d’une base de connaissances très évoluée à cette adresse.Quels seraient les « archétypes » openEHR impliqués ? 
+Instruction, observation et évaluation
+
+Quelles différences voyez-vous entre FHIR et openEHR sur la modélisation des analyses, de la prescription, du CR du médecin ?
+
+
+Quels profils IHE devraient être utilisés (mais on ne le fera pas pour ne pas se compliquer trop la vie…)
