@@ -7,3 +7,8 @@ Le lab doit ensuite envoyer les résultats à la plateforme.
 
 DOCKER plus front
 comment avoir plusieurs instances
+
+faire db pour les pdf, 
+trouver un moyen de lier le DocumentRef et le pdf, 
+endpoints pour upload pdf (revoi un lien) + telecharger un pdf à partir d'un lien,
+coté front upload un pdf utiliser les deux enpoints précedents,
