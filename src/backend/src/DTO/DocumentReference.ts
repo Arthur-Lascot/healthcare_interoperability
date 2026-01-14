@@ -6,6 +6,7 @@ import documentReferenceParams from "../utils/structure/FHIR/documentReferencePa
 import { ValidationError } from "../errors/AppError";
 import Period from "../utils/structure/FHIR/Period";
 import Resource from "./Resource";
+import attachment from "../utils/structure/FHIR/attachment";
 
 const VALID_STATUS = ["current", "superseded", "entered-in-error"] as const;
 const VALID_DOCSTATUS = ["preliminary", "final", "amended", "entered-in-error"] as const;
@@ -38,7 +39,7 @@ class DocumentReference extends Resource<"DocumentReference"> {
     readonly relatesTo?:                     {code: string, target: Reference}[];
     readonly description?:                   string;
     readonly securityLabel?:                 codeableConcept[];
-    readonly content!:                       {attachment: undefined, format?: coding}[];
+    readonly content!:                       {attachment: attachment, format?: coding}[];
     readonly context?:                       context;
 
     constructor(params: documentReferenceParams) {
