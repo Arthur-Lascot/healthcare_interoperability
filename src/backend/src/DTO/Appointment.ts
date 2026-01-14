@@ -24,28 +24,28 @@ type participant = {
 }
 
 class Appointment extends Resource<"Appointment"> {
-    identifier?:                    Identifier;
-    status!:                        appointmentStatus;
-    cancelationReason?:             codeableConcept;
-    serviceCategory?:               codeableConcept[];
-    serviceType?:                   codeableConcept[];
-    specialty?:                     codeableConcept[];
-    appointmentType?:               codeableConcept;
-    reasonCode?:                    codeableConcept[];
-    reasonReference?:               undefined;
-    priority?:                      number;
-    description?:                   string;
-    supportingInformation?:         undefined;
-    start?:                         Date;
-    end?:                           Date;
-    minutesDuration?:               number;
-    slot?:                          undefined;
-    created?:                       Date;
-    comment?:                       string;
-    patientInstruction?:            string;
-    basedOn?:                       Reference;
-    participant!:                   participant[];
-    requestedPeriod?:               Period[];
+    readonly identifier?:                    Identifier;
+    readonly status!:                        appointmentStatus;
+    readonly cancelationReason?:             codeableConcept;
+    readonly serviceCategory?:               codeableConcept[];
+    readonly serviceType?:                   codeableConcept[];
+    readonly specialty?:                     codeableConcept[];
+    readonly appointmentType?:               codeableConcept;
+    readonly reasonCode?:                    codeableConcept[];
+    readonly reasonReference?:               undefined;
+    readonly priority?:                      number;
+    readonly description?:                   string;
+    readonly supportingInformation?:         undefined;
+    readonly start?:                         Date;
+    readonly end?:                           Date;
+    readonly minutesDuration?:               number;
+    readonly slot?:                          undefined;
+    readonly created?:                       Date;
+    readonly comment?:                       string;
+    readonly patientInstruction?:            string;
+    readonly basedOn?:                       Reference;
+    readonly participant!:                   participant[];
+    readonly requestedPeriod?:               Period[];
 
     constructor(params: Partial<Appointment>) {
         super('Appointment');
