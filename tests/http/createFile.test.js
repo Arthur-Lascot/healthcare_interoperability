@@ -39,7 +39,7 @@ describe('POST /api/CR', () => {
     };
 
     const res = await supertest(BACKEND_BASE)
-      .post('/api/document')
+      .post('/api/CR')
       .set('Authorization', `Bearer ${token}`)
       .send(documentReferencePayload);
 
