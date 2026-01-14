@@ -26,12 +26,14 @@ Le système gére :
 -    **Bundle**: Réprésente une collection de ressources FHIR (Utilisé ici pour contenir les informations de plusieurs documents).
 -    **Practitioner**: Représente un praticien.
 -    **Patient**: Représente un Patient.
+-    **Appointment**: Représente un Rendez-vous.
 
 ## Choix des structures MOS
 
 -    **3.2.3 Classe "Document"**: Représente un document, non modifiable.
 -    **2.14.18 Classe "Patientele"**: Une patientèle est un ensemble de patients présentant des caractéristiques permettant d'orienter leur prise en charge par une structure de santé.
 -    **2.1.4 Classe "Professionnel"**: Donnée identifiante d'un professionnel de santé.
+-    **2.12.3 Classe "RendezVous"**: Représente un rendez-vous.
 
 ## Architecture
 

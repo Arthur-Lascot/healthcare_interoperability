@@ -1,5 +1,3 @@
-import coding from "../FHIR/coding";
-
 class Code {
     readonly valeur:                     string;
     readonly libelle?:                   string;
@@ -11,13 +9,13 @@ class Code {
     readonly identifiantAgence?:         string;
     readonly nomAgence?:                 string;
 
-    constructor(coding_FHIR: coding, langue?: string) {
-        this.valeur = coding_FHIR.code || 'unknown';
-        this.libelle = coding_FHIR.display;
+    constructor(valeur: string, libelle?: string, langue?: string, identifiantNomenclature?: string, versionNomenclature?: string) {
+        this.valeur = valeur;
+        this.libelle = libelle;
         this.langue = langue;
-        this.identifiantNomenclature = coding_FHIR.system;
+        this.identifiantNomenclature = identifiantNomenclature;
         this.nomNomenclature = 'LOINC';
-        this.versionNomenclature = coding_FHIR.version;
+        this.versionNomenclature = versionNomenclature;
         this.URINomenclature = 'https://loinc.org/';
     }
 }

@@ -5,7 +5,7 @@ import Code from "../structure/MOS/Code";
 
 const DocumentReferenceToDocumentMOS = (document: DocumentReference): DocumentMOS => {
     const format: coding = document.type!.coding![0] || {};
-    const code: Code = new Code(format);
+    const code: Code = new Code(format.code!, format.display, format.system, format.version);
 
     const metadata = {
         author:         undefined,

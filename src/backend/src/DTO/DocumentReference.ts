@@ -49,7 +49,10 @@ class DocumentReference extends Resource<"DocumentReference"> {
   }
 
   private Validate() : void {
-    if (this.status && !VALID_STATUS.includes(this.status)) {
+    if (!this.status) {
+        throw new ValidationError('Error ininitialisation of DocumentReference: Missing status value');
+    }
+    if (!VALID_STATUS.includes(this.status)) {
         throw new ValidationError(`Error ininitialisation of DocumentReference: Invalid status value: "${this.status}". 
                 Valid values: ${VALID_STATUS.join(", ")}`);
     }

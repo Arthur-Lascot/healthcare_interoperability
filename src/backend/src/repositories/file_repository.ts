@@ -3,6 +3,7 @@ import { FileEntity } from "../DTO/FileEntity";
 import { FileNotFoundError } from "../errors/FileNotFound";
 import client from "../config/postgresClient";
 import DocumentMOS from "../models/DocumentMOS";
+import RendezVous from "../models/RendezVousMOS";
 import Code from "../utils/structure/MOS/Code";
 import axios from "axios";
 
@@ -41,7 +42,7 @@ export const getDocumentReferenceFromUUID = async (uuid: UUID): Promise<Document
     }
 
     const row = result.rows[0];
-    const code: Code = new Code({code: row.code_valeur, display: row.code_libelle, system: row.code_identifiant_nomenclature, version: row.code_version_nomenclature}, row.code_langue);
+    const code: Code = new Code(row.code_valeur, row.code_libelle, row.code_langue, row.code_identifiant_nomenclature, row.code_version_nomenclature);
     const metadonnee = {author: row.author, creationDate: row.creation_date, status: row.status, location: row.location, accessLogs: row.access_logs, rawFHIR: row.raw_fhir};
     const document: DocumentMOS = new DocumentMOS({typeDocument: code, meatdonnee: metadonnee});
     return document;
@@ -74,27 +75,27 @@ export const getAllFiles = async(): Promise<DocumentMOS[]> => {
 
     let documents :DocumentMOS[] = [];
     for (const row of result.rows) {
-        const code: Code = new Code({code: row.code_valeur, display: row.code_libelle, system: row.code_identifiant_nomenclature, version: row.code_version_nomenclature}, row.code_langue);
+        const code: Code = new Code(row.code_valeur, row.code_libelle, row.code_langue, row.code_identifiant_nomenclature, row.code_version_nomenclature);
         const metadonnee = {author: row.author, creationDate: row.creation_date, status: row.status, location: row.location, accessLogs: row.access_logs, rawFHIR: row.raw_fhir};
         documents.push(new DocumentMOS({typeDocument: code, meatdonnee: metadonnee}));
     }
     return documents;
 };
 
-export const insertMosCode = async (document: DocumentMOS): Promise<string> => {
+export const insertMosCode = async (code: Code): Promise<string> => {
     const insertCodeQuery = `
         INSERT INTO mos_code (valeur, libelle, langue, identifiant_nomenclature, nom_nomenclature, version_nomenclature, uri_nomenclature)
         VALUES ($1, $2, $3, $4, $5, $6, $7)
         RETURNING id;
     `;
     const insertCodeValues = [
-        document.typeDocument!.valeur,
-        document.typeDocument!.libelle,
-        document.typeDocument!.langue,
-        document.typeDocument!.identifiantNomenclature,
-        document.typeDocument!.nomNomenclature,
-        document.typeDocument!.versionNomenclature,
-        document.typeDocument!.URINomenclature
+        code.valeur,
+        code.libelle,
+        code.langue,
+        code.identifiantNomenclature,
+        code.nomNomenclature,
+        code.versionNomenclature,
+        code.URINomenclature
     ];
     const codeResult = await client.query(insertCodeQuery, insertCodeValues);
     return codeResult.rows[0].id;;
@@ -127,6 +128,33 @@ export const insertDocumentMos = async (typeDocumentId: string, metadonneeId: st
     const documentResult = await client.query(insertDocumentQuery, [typeDocumentId, metadonneeId])
     return documentResult.rows[0].id;
 }
+
+export const insertRendezVous = async (rendezVous: RendezVous, type_rdv_id: string, priorite_id: string, status_rdv_id: string): Promise<string> => {
+    const insertRendezVousQuery = `
+        INSERT INTO rendezvous_mos (id_rdv, type_rdv_id, date_prise_rdv, date_debut_rdv, date_fin_rdv, date_annulation_rdv, piece_jointe, priorite_id, titre_rdv, status_rdv_id, description_rdv, motif_rdv, commentaire)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+        RETURNING id;
+    `;
+    const rdvValues = [
+        rendezVous.idRdv,
+        type_rdv_id,
+        rendezVous.datePriseRdv,
+        rendezVous.dateDebutRdv,
+        rendezVous.dateFinRdv,
+        rendezVous.dateAnnulationRdv,
+        rendezVous.pieceJointe,
+        priorite_id,
+        rendezVous.titreRdv,
+        status_rdv_id,
+        rendezVous.descriptionRdv,
+        rendezVous.motifRdv,
+        rendezVous.commentaire
+    ];
+
+    const rdvResult = await client.query(insertRendezVousQuery, rdvValues);
+    return rdvResult.rows[0].id;
+}
+
 
 export const getFileFromUrl = async (url: string): Promise<any> => {
     const result = await axios.get(url, { responseType: 'arraybuffer' });

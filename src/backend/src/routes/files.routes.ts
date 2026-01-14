@@ -10,4 +10,6 @@ router.get("/DocumentReferences", asyncHandler(FileController.getDocumentReferen
 
 router.post("/CR", asyncHandler(FileController.createCRController));
 
+router.post("/TransfertAnalyseRequest", asyncHandler(FileController.TransfertAnalyseRequestController));
+
 export default router;

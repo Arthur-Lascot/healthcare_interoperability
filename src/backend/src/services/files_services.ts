@@ -3,7 +3,10 @@ import { Role } from "../utils/structure/FHIR/Roles"
 import rawHabilitation from "../habilitation_matrix.json"
 import { UUID } from "crypto";
 import DocumentMOS from "../models/DocumentMOS";
+import RendezVous from "../models/RendezVousMOS";
 import { ForbiddenError } from "../errors/AppError";
+import ServiceRequestModel from "../models/ServiceRequestModel";
+import axios from "axios";
 
 
 const habilitation: Record<string, boolean[]> = rawHabilitation;
@@ -39,9 +42,23 @@ export const createDocument = async (document: DocumentMOS): Promise<string> => 
     const binary = await FileRepository.getFileFromUrl(urlToRetrieveFile);
     // appeller le repository qui permet de save dans la base vrai document
 
-    const typeDocumentId = await FileRepository.insertMosCode(document);
+    const typeDocumentId = await FileRepository.insertMosCode(document.typeDocument!);
     const metadonneeId = await FileRepository.insertMetadonnees(document);
     const documentId = await FileRepository.insertDocumentMos(typeDocumentId, metadonneeId);
 
     return documentId;
+}
+
+export const createRendezVous = async (rendezVous: RendezVous): Promise<string> => {
+    const type_rdv_id = await FileRepository.insertMosCode(rendezVous.typeRdv!);
+    const priorite_id = await FileRepository.insertMosCode(rendezVous.priorite!);
+    const status_rdv_id = await FileRepository.insertMosCode(rendezVous.statusRdv!);
+
+    const rdvId = await FileRepository.insertRendezVous(rendezVous, type_rdv_id, priorite_id, status_rdv_id);
+    return rdvId;
+}
+
+export const transfertAnalyseRequest = async (serviceRequestModel: ServiceRequestModel): Promise<void> => {
+    const urlToSendFile = ''; //FIXME
+    await axios.post(urlToSendFile, serviceRequestModel);
 }

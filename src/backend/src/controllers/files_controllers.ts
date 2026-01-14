@@ -1,12 +1,18 @@
 import * as FileService from "../services/files_services"
 import { Role } from "../utils/structure/FHIR/Roles";
 import { ValidationError } from "../errors/AppError";
-import { Request, Response } from "express";
+import { Application, Request, Response } from "express";
 import { UUID } from "crypto";
 import DocumentReference from "../DTO/DocumentReference";
 import DocumentReferenceToDocumentMOS from "../utils/mapping/DocumentReferenceToDocumentMOS";
 import DocumentMOS from "../models/DocumentMOS";
 import Bundle from "../DTO/Bundle";
+import Resource from "../DTO/Resource";
+import BundleCollectionToResourcesList from "../utils/mapping/BundleCollectionToResourcesList";
+import ServiceRequest from "../DTO/ServiceRequest";
+import Appointment from "../DTO/Appointment";
+import AppointmentToRendezVous from "../utils/mapping/AppointmentToRendezVous";
+import ServiceRequestModel from "../models/ServiceRequestModel";
 
 export const getDocumentReferenceController = async (req: Request, res: Response): Promise<Response> => {
     
@@ -43,14 +49,34 @@ export const getDocumentReferencesController = async (req: Request, res: Respons
 }
 
 export const createCRController = async (req: Request, res: Response): Promise<Response> => {
-
-    if (!req.body || Object.keys(req.body).length === 0) {
-        throw new ValidationError("Request body is empty or invalid");
-    }
-
     const documentReference = new DocumentReference(req.body);
     const documentMOS = DocumentReferenceToDocumentMOS(documentReference);
     
     const newId = await FileService.createDocument(documentMOS);    
     return res.status(201).json({ status: "created", uuid: newId });
+}
+
+export const TransfertAnalyseRequestController = async (req: Request, res: Response): Promise<Response> => {
+    const bundle = new Bundle(req.body);
+    let resourcesList: Resource[] = await BundleCollectionToResourcesList(bundle);
+
+    for (const resource of resourcesList) {
+        if (resource.resourceType === "DocumentReference") {
+            const documentReference = resource as DocumentReference;
+            const documentMOS = DocumentReferenceToDocumentMOS(documentReference);
+            await FileService.createDocument(documentMOS);
+        }
+        else if (resource.resourceType === "serviceRequest") {
+            const serviceRequest = resource as ServiceRequest;
+            const serviceRequestModel = new ServiceRequestModel(serviceRequest);
+            await FileService.transfertAnalyseRequest(serviceRequestModel);
+        }
+        else if (resource.resourceType === "Appointment") {
+            const appointment = resource as Appointment;
+            const rendezVousMOS = AppointmentToRendezVous(appointment);
+            await FileService.createRendezVous(rendezVousMOS);
+        }
+    }
+
+    return res.status(201);
 }

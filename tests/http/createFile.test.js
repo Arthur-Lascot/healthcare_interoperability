@@ -3,7 +3,7 @@ const { getToken, BACKEND_BASE } = require('./helper');
 const fs = require('fs');
 const path = require('path');
 
-describe('POST /api/document', () => {
+describe('POST /api/CR', () => {
   let token;
 
   beforeAll(async () => {
