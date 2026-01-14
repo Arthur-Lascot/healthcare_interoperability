@@ -42,7 +42,7 @@ export const getDocumentReferencesController = async (req: Request, res: Respons
     return res.json(bundle);
 }
 
-export const createFileController = async (req: Request, res: Response): Promise<Response> => {
+export const createCRController = async (req: Request, res: Response): Promise<Response> => {
 
     if (!req.body || Object.keys(req.body).length === 0) {
         throw new ValidationError("Request body is empty or invalid");

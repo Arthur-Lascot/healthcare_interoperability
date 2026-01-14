@@ -34,6 +34,11 @@ export const getAllAccessibleFile = async (role: Role): Promise<DocumentMOS[]> =
 }
 
 export const createDocument = async (document: DocumentMOS): Promise<string> => {
+
+    const urlToRetrieveFile = document.meatdonnee!.location!;
+    const binary = await FileRepository.getFileFromUrl(urlToRetrieveFile);
+    // appeller le repository qui permet de save dans la base vrai document
+
     const typeDocumentId = await FileRepository.insertMosCode(document);
     const metadonneeId = await FileRepository.insertMetadonnees(document);
     const documentId = await FileRepository.insertDocumentMos(typeDocumentId, metadonneeId);

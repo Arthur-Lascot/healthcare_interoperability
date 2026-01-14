@@ -11,7 +11,7 @@ const DocumentReferenceToDocumentMOS = (document: DocumentReference): DocumentMO
         author:         undefined,
         creationDate:   document.date,
         status:         document.status,
-        location:       undefined,
+        location:       document.content[0].attachment.url,
         accessLogs:     undefined,
         rawFHIR:        document
     };

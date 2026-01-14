@@ -8,6 +8,6 @@ router.get("/DocumentReference/:uuid", asyncHandler(FileController.getDocumentRe
 
 router.get("/DocumentReferences", asyncHandler(FileController.getDocumentReferencesController));
 
-router.post("/document", asyncHandler(FileController.createFileController));
+router.post("/CR", asyncHandler(FileController.createCRController));
 
 export default router;

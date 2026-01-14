@@ -4,6 +4,8 @@ import { FileNotFoundError } from "../errors/FileNotFound";
 import client from "../config/postgresClient";
 import DocumentMOS from "../models/DocumentMOS";
 import Code from "../utils/structure/MOS/Code";
+import axios from "axios";
+
 
 
 export const getDocumentReferenceFromUUID = async (uuid: UUID): Promise<DocumentMOS> => {
@@ -124,5 +126,13 @@ export const insertDocumentMos = async (typeDocumentId: string, metadonneeId: st
     `;
     const documentResult = await client.query(insertDocumentQuery, [typeDocumentId, metadonneeId])
     return documentResult.rows[0].id;
+}
+
+export const getFileFromUrl = async (url: string): Promise<any> => {
+    const result = await axios.get(url, { responseType: 'arraybuffer' });
+    if (!result.data) {
+        throw new FileNotFoundError(url);
+    }
+    return result;
 }
 
