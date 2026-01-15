@@ -17,7 +17,7 @@ services:
       context: ./src/backend
       dockerfile: Dockerfile 
     ports:
-      - "3002:3002"
+      - "3005:3002"
     environment:
       KEYCLOAK_URL: http://keycloak:8080
       KEYCLOAK_JWKS_URI: ${KEYCLOAK_JWKS_URI}
@@ -60,7 +60,7 @@ services:
     image: postgres:16
     restart: always
     ports:
-      - "5432:5432"
+      - "5435:5432"
     environment:
       POSTGRES_DB: document
       POSTGRES_USER: ${DB_USER}
@@ -75,7 +75,7 @@ services:
     image: mongo:7.0
     restart: always
     ports:
-      - "27017:27017"
+      - "27020:27017"
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}

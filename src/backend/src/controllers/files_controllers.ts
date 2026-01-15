@@ -108,7 +108,7 @@ export const AnalyseController = async (req: Request, res: Response): Promise<Re
         }
     }
 
-    const hardcodePathTofile = 'http://localhost:' + process.env.BACKEND_PORT +'/api/pdf/download/'+ process.env.ANALYSE_PDF; 
+    const hardcodePathTofile = 'http://localhost:' + process.env.BACKEND_PORT_LABO +'/api/pdf/download/'+ process.env.ANALYSE_PDF; 
     const DocumentMOS : DocumentMOS = await FileService.constructDocument(hardcodePathTofile);
 
     return res.status(201).json(DocumentMOS.meatdonnee?.rawFHIR);
