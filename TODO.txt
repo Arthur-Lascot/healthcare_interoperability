@@ -12,3 +12,6 @@ faire db pour les pdf,
 trouver un moyen de lier le DocumentRef et le pdf, 
 endpoints pour upload pdf (revoi un lien) + telecharger un pdf à partir d'un lien,
 coté front upload un pdf utiliser les deux enpoints précedents,
+
+dossier avec une analyse.pdf qui s'upload automatiquement dans la db (uniquement dans la db du labo), 
+récup l'id et le stock en var d'env ANALYSE_PDF.
