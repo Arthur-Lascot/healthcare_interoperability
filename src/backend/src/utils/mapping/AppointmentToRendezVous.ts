@@ -7,8 +7,8 @@ import identifiant from "../structure/MOS/identifiant";
 
 const AppointmentToRendezVous = (appointment: Appointment): RendezVous => {
     let coding = appointment.appointmentType?.coding![0] || {};
-    const typeRdvCode: Code = new Code(coding.code!, coding.display, coding.system, coding.version);
-    const prioriteCode: Code = new Code(appointment.priority!.toString());
+    const typeRdvCode: Code = new Code(coding.code || 'truc', coding.display, coding.system, coding.version);
+    const prioriteCode = new Code(appointment.priority?.toString() || '0');
     const statusRdvCode: Code = new Code(appointment.status);
 
     let idRdv = undefined;

@@ -199,17 +199,90 @@ class ApiService {
     return result.uuid;
   }
 
-  async sendTransfertAnalyseRequest(bundleData: any, token: string): Promise<any> {
+  async sendTransfertAnalyseRequest(transfertData: any, token: string): Promise<any> {
+    console.log('📦 Création du Bundle avec DocumentReference + Appointment');
+    
+    // Build DocumentReference
+    const documentReference = {
+      resourceType: 'DocumentReference',
+      status: transfertData.status,
+      docStatus: transfertData.docStatus,
+      date: transfertData.date,
+      description: transfertData.description,
+      custodian: transfertData.custodian,
+      type: {
+        coding: [
+          {
+            system: "http://loinc.org",
+            code: "11488-4",
+            display: "Consultation note"
+          }
+        ]
+      },
+      subject: {
+        reference: "Patient/12345"
+      },
+      author: {
+        reference: "Practitioner/67890"
+      },
+      content: [
+        {
+          attachment: {
+            contentType: "application/pdf",
+            url: transfertData.content
+          }
+        }
+      ]
+    };
+
+    // Build Appointment
+    const appointment = {
+      resourceType: 'Appointment',
+      status: 'proposed',
+      start: transfertData.appointmentStart,
+      end: transfertData.appointmentEnd,
+      participants: [
+        { 
+          actor: { 
+            display: transfertData.appointmentLocation 
+          },
+          status: 'accepted'
+        }
+      ],
+      description: `Rendez-vous pour ${transfertData.description}`
+    };
+
+    // Build Bundle
+    const bundlePayload = {
+      resourceType: 'Bundle',
+      type: 'message',
+      timestamp: new Date().toISOString(),
+      entry: [
+        {
+          fullUrl: `urn:uuid:${crypto.randomUUID()}`,
+          resource: documentReference
+        },
+        {
+          fullUrl: `urn:uuid:${crypto.randomUUID()}`,
+          resource: appointment
+        }
+      ]
+    };
+
+    console.log('📤 Envoi Bundle:', JSON.stringify(bundlePayload, null, 2));
+
     const response = await fetch(`${this.baseUrl}/TransfertAnalyseRequest`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(bundleData),
+      body: JSON.stringify(bundlePayload),
     });
 
     if (!response.ok) {
+      const errBody = await response.text();
+      console.error('❌ Réponse serveur:', response.status, errBody);
       throw new Error(`Erreur ${response.status}: ${response.statusText}`);
     }
 
