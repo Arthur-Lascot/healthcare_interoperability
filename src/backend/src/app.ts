@@ -13,9 +13,18 @@ const app = express();
 
 const corsOptions = {
   origin: [
-    'http://localhost:3000',
-    'http://frontend:3000',
-    'http://localhost:3002' // Add this line to allow requests from port 3002
+    'http://frontend1:3010',
+    'http://frontend2:3011',
+    'http://frontend3:3012',
+    'http://backend2:3003',
+    'http://backend3:3004',
+    'http://backend1:3005',
+    'http://localhost:3010',
+    'http://localhost:3011',
+    'http://localhost:3012',
+    'http://localhost:3003',
+    'http://loacalhost:3004',
+    'http://localhost:3005'
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
