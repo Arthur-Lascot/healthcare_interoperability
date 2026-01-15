@@ -14,6 +14,7 @@ export interface DocumentReference {
     id?: string;
     type?: CodeableConcept;
     description?: string;
+    content?: {attachment: {url: string}};
 }
 
 export interface BundleEntry {

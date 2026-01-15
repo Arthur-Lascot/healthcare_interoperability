@@ -8,6 +8,7 @@ import { ForbiddenError } from "../errors/AppError";
 import ServiceRequestModel from "../models/ServiceRequestModel";
 import axios, { Axios, AxiosResponse } from "axios";
 import BundleModel from "../models/BundleModel";
+import * as PDFService from "../services/pdf_services";
 
 
 const habilitation: Record<string, boolean[]> = rawHabilitation;
@@ -40,8 +41,8 @@ export const getAllAccessibleDocumentReference = async (role: Role): Promise<Doc
 export const createDocument = async (document: DocumentMOS): Promise<string> => {
 
     const urlToRetrieveFile = document.meatdonnee!.location!;
-    //const binary = await FileRepository.getFileFromUrl(urlToRetrieveFile);
-    // appeller le repository qui permet de save dans la base vrai document
+    const binary = await FileRepository.getFileFromUrl(urlToRetrieveFile);
+    await PDFService.uploadPDF(binary,'AutomatedService');
 
     const typeDocumentId = await FileRepository.insertMosCode(document.typeDocument!);
     const metadonneeId = await FileRepository.insertMetadonnees(document);
@@ -91,5 +92,5 @@ export const constructDocument = async (APIToFile: string): Promise<DocumentMOS>
 
 export const downloadAndCopy = async (url: string) : Promise<void> => {
     const response = await FileRepository.getFileFromUrl(url);
-    //add file minio
+    await PDFService.uploadPDF(response,'AutomatedService');
 }
