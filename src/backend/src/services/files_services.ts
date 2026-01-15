@@ -8,8 +8,6 @@ import { ForbiddenError } from "../errors/AppError";
 import ServiceRequestModel from "../models/ServiceRequestModel";
 import axios, { Axios, AxiosResponse } from "axios";
 import BundleModel from "../models/BundleModel";
-import { url } from "inspector";
-import { title } from "process";
 
 
 const habilitation: Record<string, boolean[]> = rawHabilitation;
@@ -62,7 +60,7 @@ export const createRendezVous = async (rendezVous: RendezVous): Promise<string> 
 }
 
 export const transfertAnalyseRequest = async (bundleModel: BundleModel): Promise<AxiosResponse> => {
-    const urlToSendFile = '/api'; //FIXME
+    const urlToSendFile = process.env.target_url || '';
     const res = await axios.post(urlToSendFile, bundleModel.rawFHIR);
     return res;
 }
