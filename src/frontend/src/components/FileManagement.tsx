@@ -131,6 +131,17 @@ const FileManagement: React.FC = () => {
         >
           Rechercher un Fichier
         </button>
+        <Link to="/pdfs" style={{
+            padding: '10px 20px',
+            border: 'none',
+            backgroundColor: 'transparent',
+            color: '#333',
+            cursor: 'pointer',
+            textDecoration: 'none',
+            borderBottom: '2px solid transparent'
+          }}>
+          Gestion des PDFs
+        </Link>
         <Link to="/document-references" style={{
             padding: '10px 20px',
             border: 'none',
