@@ -13,6 +13,7 @@ import ServiceRequest from "../DTO/ServiceRequest";
 import Appointment from "../DTO/Appointment";
 import AppointmentToRendezVous from "../utils/mapping/AppointmentToRendezVous";
 import ServiceRequestModel from "../models/ServiceRequestModel";
+import BundleModel from "../models/BundleModel";
 
 export const getDocumentReferenceController = async (req: Request, res: Response): Promise<Response> => {
     
@@ -36,7 +37,7 @@ export const getDocumentReferencesController = async (req: Request, res: Respons
     }
 
     const role: Role = req.role;
-    const files: DocumentMOS[] = await FileService.getAllAccessibleFile(role);
+    const files: DocumentMOS[] = await FileService.getAllAccessibleDocumentReference(role);
     const bundle = new Bundle(
         {
             type: "searchset", 
@@ -56,7 +57,7 @@ export const createCRController = async (req: Request, res: Response): Promise<R
     return res.status(201).json({ status: "created", uuid: newId });
 }
 
-export const TransfertAnalyseRequestController = async (req: Request, res: Response): Promise<Response> => {
+export const TransfertAnalyseRequestController = async (req: Request, res: Response): Promise<void> => {
     const bundle = new Bundle(req.body);
     let resourcesList: Resource[] = await BundleCollectionToResourcesList(bundle);
 
@@ -69,7 +70,33 @@ export const TransfertAnalyseRequestController = async (req: Request, res: Respo
         else if (resource.resourceType === "serviceRequest") {
             const serviceRequest = resource as ServiceRequest;
             const serviceRequestModel = new ServiceRequestModel(serviceRequest);
-            await FileService.transfertAnalyseRequest(serviceRequestModel);
+            // Could save it as well
+        }
+        else if (resource.resourceType === "Appointment") {
+            const appointment = resource as Appointment;
+            const rendezVousMOS = AppointmentToRendezVous(appointment);
+            await FileService.createRendezVous(rendezVousMOS);
+        }
+    }
+    const response = await FileService.transfertAnalyseRequest(new BundleModel(bundle));
+    res.status(response.status);
+    response.data.pipe(res);
+}
+
+export const AnalyseController = async (req: Request, res: Response): Promise<void> => {
+    const bundle = new Bundle(req.body);
+    let resourcesList: Resource[] = await BundleCollectionToResourcesList(bundle);
+
+    for (const resource of resourcesList) {
+        if (resource.resourceType === "DocumentReference") {
+            const documentReference = resource as DocumentReference;
+            const documentMOS = DocumentReferenceToDocumentMOS(documentReference);
+            await FileService.createDocument(documentMOS);
+        }
+        else if (resource.resourceType === "serviceRequest") {
+            const serviceRequest = resource as ServiceRequest;
+            const serviceRequestModel = new ServiceRequestModel(serviceRequest);
+            // Could save it as well
         }
         else if (resource.resourceType === "Appointment") {
             const appointment = resource as Appointment;
@@ -78,5 +105,9 @@ export const TransfertAnalyseRequestController = async (req: Request, res: Respo
         }
     }
 
-    return res.status(201);
+    const hardcodePathTofile = '----'
+    const stream = await FileService.getFile(hardcodePathTofile);
+
+    res.setHeader("Content-Type", "application/pdf");
+    stream.pipe(res);
 }

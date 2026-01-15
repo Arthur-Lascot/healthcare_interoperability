@@ -6,7 +6,8 @@ import DocumentMOS from "../models/DocumentMOS";
 import RendezVous from "../models/RendezVousMOS";
 import { ForbiddenError } from "../errors/AppError";
 import ServiceRequestModel from "../models/ServiceRequestModel";
-import axios from "axios";
+import axios, { Axios, AxiosResponse } from "axios";
+import BundleModel from "../models/BundleModel";
 
 
 const habilitation: Record<string, boolean[]> = rawHabilitation;
@@ -29,7 +30,7 @@ export const getDocumentReference = async (role: Role, fileUUID: UUID): Promise<
     return document;
 }
 
-export const getAllAccessibleFile = async (role: Role): Promise<DocumentMOS[]> => {
+export const getAllAccessibleDocumentReference = async (role: Role): Promise<DocumentMOS[]> => {
     const files: DocumentMOS[] = await FileRepository.getAllFiles();
     let accessibleFiles: DocumentMOS[] = [];
     files.forEach((f: DocumentMOS) => { if (isReadableBy(f, role)) {accessibleFiles.push(f)} })
@@ -58,7 +59,13 @@ export const createRendezVous = async (rendezVous: RendezVous): Promise<string> 
     return rdvId;
 }
 
-export const transfertAnalyseRequest = async (serviceRequestModel: ServiceRequestModel): Promise<void> => {
-    const urlToSendFile = ''; //FIXME
-    await axios.post(urlToSendFile, serviceRequestModel);
+export const transfertAnalyseRequest = async (bundleModel: BundleModel): Promise<AxiosResponse> => {
+    const urlToSendFile = '/api'; //FIXME
+    const res = await axios.post(urlToSendFile, bundleModel.rawFHIR);
+    return res;
+}
+
+export const getFile = async (fileUUID: UUID): Promise<any> => {
+    const stream = await FileRepository.getMinioFile(fileUUID);
+    return stream;
 }

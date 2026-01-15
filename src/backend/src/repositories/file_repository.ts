@@ -157,10 +157,14 @@ export const insertRendezVous = async (rendezVous: RendezVous, type_rdv_id: stri
 
 
 export const getFileFromUrl = async (url: string): Promise<any> => {
-    const result = await axios.get(url, { responseType: 'arraybuffer' });
+    const result = await axios.get(url, { responseType: 'stream' });
     if (!result.data) {
         throw new FileNotFoundError(url);
     }
     return result;
+}
+
+export const getMinioFile = async (uuid: UUID): Promise<any> => {
+    return uuid; //TODO
 }
 

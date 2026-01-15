@@ -12,4 +12,6 @@ router.post("/CR", asyncHandler(FileController.createCRController));
 
 router.post("/TransfertAnalyseRequest", asyncHandler(FileController.TransfertAnalyseRequestController));
 
+router.post("/Analyse", asyncHandler(FileController.AnalyseController));
+
 export default router;
