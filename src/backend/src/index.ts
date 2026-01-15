@@ -1,11 +1,14 @@
 import app from "./app";
 import logger from "./logger/logger";
+import client from "./config/postgresClient";
 import { connectMongoDB } from "./config/mongodbClient";
 
 const PORT = process.env.BACKEND_PORT;
 
 const startServer = async () => {
   try {
+    await client.connect();
+    logger.info("✅ PostgreSQL connecté");
     await connectMongoDB();
     logger.info("✅ MongoDB connecté");
 

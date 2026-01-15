@@ -23,8 +23,11 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
     req.log.info({path: req.path}, "Missing authorization header");
     return res.status(401).json({ error: "Missing authorization header" });
   }
+  
 
   const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : authHeader;
+  req.token = token;
+
 
   jwt.verify(token, getKey, { algorithms: ["RS256"] }, (err, decoded: any) => {
     if (err) {

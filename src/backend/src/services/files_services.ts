@@ -38,11 +38,11 @@ export const getAllAccessibleDocumentReference = async (role: Role): Promise<Doc
     return accessibleFiles;
 }
 
-export const createDocument = async (document: DocumentMOS): Promise<string> => {
+export const createDocument = async (document: DocumentMOS, token?: string): Promise<string> => {
 
     const urlToRetrieveFile = document.meatdonnee!.location!;
-    const binary = await FileRepository.getFileFromUrl(urlToRetrieveFile);
-    await PDFService.uploadPDF(binary,'AutomatedService');
+    const binary = await FileRepository.getFileFromUrl(urlToRetrieveFile, token);
+    await PDFService.uploadPDF({file_name:"bonjour", file_buffer: binary},'AutomatedService');
 
     const typeDocumentId = await FileRepository.insertMosCode(document.typeDocument!);
     const metadonneeId = await FileRepository.insertMetadonnees(document);

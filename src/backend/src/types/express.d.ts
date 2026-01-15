@@ -5,6 +5,7 @@ declare module 'express-serve-static-core' {
     role?: Role;
     userId?: string;
     file?: Express.Multer.File;
+    token?: string;
   }
 }
 

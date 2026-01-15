@@ -1,7 +1,7 @@
 import { FileFormData } from "../components/FileManagement";
 
 class ApiService {
-  private baseUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3002';
+  private baseUrl = process.env.REACT_APP_BACKEND_URL;
   
   constructor() {
     // Ensure baseUrl ends with /api if not already present
@@ -74,13 +74,13 @@ class ApiService {
         {
           attachment: {
             contentType: "application/pdf",
-            data: undefined
+            url: "localhost:3005/api/pdf/download/your-pdf-id-here"
           }
         }
       ]
     };
 
-    const response = await fetch(`${this.baseUrl}/document`, {
+    const response = await fetch(`http://localhost:3003/api/CR`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -145,17 +145,53 @@ class ApiService {
     }
   }
 
-  async createCR(crData: any, token: string): Promise<string> {
-    const response = await fetch(`${this.baseUrl}/CR`, {
+  async createCR(crData: { status: string; date: string; custodian: string; description: string; docStatus: string; content: string }, token: string): Promise<string> {
+    console.log('📤 Envoi CR avec token:', token ? `${token.substring(0, 20)}...` : 'undefined');
+    
+    const documentReferencePayload = {
+      resourceType: 'DocumentReference',
+      status: crData.status,
+      docStatus: crData.docStatus,
+      date: crData.date,
+      description: crData.description,
+      custodian: crData.custodian,
+      type: {
+        coding: [
+          {
+            system: "http://loinc.org",
+            code: "34133-9",
+            display: "Clinical Encounter note"
+          }
+        ]
+      },
+      subject: {
+        reference: "Patient/12345"
+      },
+      author: {
+        reference: "Practitioner/67890"
+      },
+      content: [
+        {
+          attachment: {
+            contentType: "application/pdf",
+            url: crData.content
+          }
+        }
+      ]
+    };
+
+    const response = await fetch(`http://localhost:3003/api/CR`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(crData),
+      body: JSON.stringify(documentReferencePayload),
     });
 
     if (!response.ok) {
+      const errBody = await response.text();
+      console.error('❌ Réponse serveur:', response.status, errBody);
       throw new Error(`Erreur ${response.status}: ${response.statusText}`);
     }
 

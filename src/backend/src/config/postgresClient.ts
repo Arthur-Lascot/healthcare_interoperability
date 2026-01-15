@@ -9,6 +9,7 @@ const client = new Pool({
 });
 
 async() => {
+  console.log("POOOOOOOOOOOOOOOOOORT: ", process.env.DB_PORT);
   try {
     const clientInit = await client.connect();
   } catch (err) {

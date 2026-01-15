@@ -11,8 +11,11 @@ export const uploadPDF = async (req: PDFUploadRequest, userId: string): Promise<
 
   try {
     // Validate input
-    if (!req.file_name || !req.file_buffer) {
-      throw new ValidationError("Missing required fields: file_name or file_buffer");
+    if (!req.file_name) {
+      throw new ValidationError("Missing required fields: file_name ");
+    }
+    else if (!req.file_buffer) {
+      throw new ValidationError("Missing required fields: file_buffer");
     }
 
     // Calculate checksum for file integrity

@@ -24,8 +24,8 @@ services:
       BACKEND_PORT: ${BACKEND_PORT}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
-      DB_HOST: ${DB_HOST}
-      DB_PORT: ${DB_PORT_MEDECIN}
+      DB_HOST: db1
+      DB_PORT: 5432
       DB_NAME: ${DB_NAME}
       MONGO_USER: ${MONGO_USER}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
@@ -68,8 +68,8 @@ services:
     networks:
       - app-network
     volumes:
-      - pgdata:/var/lib/postgresql/data
-      - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+      - pgdata1:/var/lib/postgresql/data
+      - ./docker-entrypoint-initdb.d/init.sql:/docker-entrypoint-initdb.d/init.sql
 
   mongodb1:
     image: mongo:7.0
@@ -100,8 +100,8 @@ services:
       BACKEND_PORT: ${BACKEND_PORT}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
-      DB_HOST: ${DB_HOST}
-      DB_PORT: ${DB_PORT_HUB}
+      DB_HOST: db2
+      DB_PORT: 5432
       DB_NAME: ${DB_NAME}
       MONGO_USER: ${MONGO_USER}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
@@ -143,8 +143,8 @@ services:
     networks:
       - app-network
     volumes:
-      - pgdata:/var/lib/postgresql/data
-      - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+      - pgdata2:/var/lib/postgresql/data
+      - ./docker-entrypoint-initdb.d/init.sql:/docker-entrypoint-initdb.d/init.sql
 
   mongodb2:
     image: mongo:7.0
@@ -175,8 +175,8 @@ services:
       BACKEND_PORT: ${BACKEND_PORT}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
-      DB_HOST: ${DB_HOST}
-      DB_PORT: ${DB_PORT_LABO}
+      DB_HOST: db3
+      DB_PORT: 5432
       DB_NAME: ${DB_NAME}
       MONGO_USER: ${MONGO_USER}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
@@ -218,8 +218,8 @@ services:
     networks:
       - app-network
     volumes:
-      - pgdata:/var/lib/postgresql/data
-      - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+      - pgdata3:/var/lib/postgresql/data
+      - ./docker-entrypoint-initdb.d/init.sql:/docker-entrypoint-initdb.d/init.sql
 
   mongodb3:
     image: mongo:7.0
@@ -242,7 +242,9 @@ networks:
     driver: bridge
 
 volumes:
-  pgdata:
+  pgdata1:
+  pgdata2:
+  pgdata3:
   mongodb_data1:
   mongodb_data2:
   mongodb_data3:

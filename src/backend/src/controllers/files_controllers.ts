@@ -53,7 +53,7 @@ export const createCRController = async (req: Request, res: Response): Promise<R
     const documentReference = new DocumentReference(req.body);
     const documentMOS = DocumentReferenceToDocumentMOS(documentReference);
     
-    const newId = await FileService.createDocument(documentMOS);    
+    const newId = await FileService.createDocument(documentMOS, req.token);    
     return res.status(201).json({ status: "created", uuid: newId });
 }
 
@@ -65,7 +65,7 @@ export const TransfertAnalyseRequestController = async (req: Request, res: Respo
         if (resource.resourceType === "DocumentReference") {
             const documentReference = resource as DocumentReference;
             const documentMOS = DocumentReferenceToDocumentMOS(documentReference);
-            await FileService.createDocument(documentMOS);
+            await FileService.createDocument(documentMOS, req.token);
         }
         else if (resource.resourceType === "serviceRequest") {
             const serviceRequest = resource as ServiceRequest;
@@ -94,7 +94,7 @@ export const AnalyseController = async (req: Request, res: Response): Promise<Re
         if (resource.resourceType === "DocumentReference") {
             const documentReference = resource as DocumentReference;
             const documentMOS = DocumentReferenceToDocumentMOS(documentReference);
-            await FileService.createDocument(documentMOS);
+            await FileService.createDocument(documentMOS, req.token);
         }
         else if (resource.resourceType === "serviceRequest") {
             const serviceRequest = resource as ServiceRequest;

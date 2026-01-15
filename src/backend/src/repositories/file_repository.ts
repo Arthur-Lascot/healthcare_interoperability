@@ -156,8 +156,14 @@ export const insertRendezVous = async (rendezVous: RendezVous, type_rdv_id: stri
 }
 
 
-export const getFileFromUrl = async (url: string): Promise<any> => {
-    const result = await axios.get(url, { responseType: 'stream' });
+export const getFileFromUrl = async (url: string, token?: string): Promise<any> => {
+    const config: any = {};
+    if (token) {
+        config.headers = {
+            'Authorization': `Bearer ${token}`
+        };
+    }
+    const result = await axios.get(url, config);
     if (!result.data) {
         throw new FileNotFoundError(url);
     }

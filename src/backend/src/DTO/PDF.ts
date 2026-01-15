@@ -1,5 +1,5 @@
 export interface PDFUploadRequest {
-  document_mos_id: string;
+  document_mos_id?: string;
   file_name: string;
   file_buffer: Buffer;
   uploaded_by?: string;
