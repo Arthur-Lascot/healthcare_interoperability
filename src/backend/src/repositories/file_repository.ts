@@ -161,7 +161,7 @@ export const getFileFromUrl = async (url: string): Promise<any> => {
     if (!result.data) {
         throw new FileNotFoundError(url);
     }
-    return result;
+    return result.data;
 }
 
 export const getMinioFile = async (uuid: UUID): Promise<any> => {

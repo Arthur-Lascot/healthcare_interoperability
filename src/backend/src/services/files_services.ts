@@ -8,6 +8,8 @@ import { ForbiddenError } from "../errors/AppError";
 import ServiceRequestModel from "../models/ServiceRequestModel";
 import axios, { Axios, AxiosResponse } from "axios";
 import BundleModel from "../models/BundleModel";
+import { url } from "inspector";
+import { title } from "process";
 
 
 const habilitation: Record<string, boolean[]> = rawHabilitation;
@@ -68,4 +70,28 @@ export const transfertAnalyseRequest = async (bundleModel: BundleModel): Promise
 export const getFile = async (fileUUID: UUID): Promise<any> => {
     const stream = await FileRepository.getMinioFile(fileUUID);
     return stream;
+}
+
+export const constructDocument = async (APIToFile: string): Promise<DocumentMOS> => {
+    const analyseDocument = new DocumentMOS({
+        meatdonnee: { rawFHIR: {
+            status : "current",
+            content : [{
+                attachment : {
+                    contentType: "application/pdf", 
+                    language: "fr", 
+                    url: APIToFile,
+                    title: "Analyse",
+                    creation: new Date()
+                    }
+                }]
+            }        
+        }
+    })
+    return analyseDocument;
+}
+
+export const downloadAndCopy = async (url: string) : Promise<void> => {
+    const response = await FileRepository.getFileFromUrl(url);
+    //add file minio
 }

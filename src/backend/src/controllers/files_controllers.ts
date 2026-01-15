@@ -57,7 +57,7 @@ export const createCRController = async (req: Request, res: Response): Promise<R
     return res.status(201).json({ status: "created", uuid: newId });
 }
 
-export const TransfertAnalyseRequestController = async (req: Request, res: Response): Promise<void> => {
+export const TransfertAnalyseRequestController = async (req: Request, res: Response): Promise<Response> => {
     const bundle = new Bundle(req.body);
     let resourcesList: Resource[] = await BundleCollectionToResourcesList(bundle);
 
@@ -79,11 +79,14 @@ export const TransfertAnalyseRequestController = async (req: Request, res: Respo
         }
     }
     const response = await FileService.transfertAnalyseRequest(new BundleModel(bundle));
+    const analyseReference = new DocumentReference(response.data);
+    await FileService.downloadAndCopy(analyseReference.content![0].attachment.url!);
+
     res.status(response.status);
-    response.data.pipe(res);
+    return res.json(response.data);
 }
 
-export const AnalyseController = async (req: Request, res: Response): Promise<void> => {
+export const AnalyseController = async (req: Request, res: Response): Promise<Response> => {
     const bundle = new Bundle(req.body);
     let resourcesList: Resource[] = await BundleCollectionToResourcesList(bundle);
 
@@ -105,9 +108,8 @@ export const AnalyseController = async (req: Request, res: Response): Promise<vo
         }
     }
 
-    const hardcodePathTofile = '----'
-    const stream = await FileService.getFile(hardcodePathTofile);
+    const hardcodePathTofile = 'API/TO/FILE/PATH'
+    const DocumentMOS : DocumentMOS = await FileService.constructDocument(hardcodePathTofile);
 
-    res.setHeader("Content-Type", "application/pdf");
-    stream.pipe(res);
+    return res.status(201).json(DocumentMOS.meatdonnee?.rawFHIR);
 }
