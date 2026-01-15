@@ -12,7 +12,7 @@ services:
     networks:
       - app-network
     
-  backend:
+  backend1:
     build:
       context: ./src/backend
       dockerfile: Dockerfile 
@@ -25,12 +25,15 @@ services:
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
       DB_HOST: ${DB_HOST}
-      DB_PORT: ${DB_PORT}
+      DB_PORT: ${DB_PORT_MEDECIN}
       DB_NAME: ${DB_NAME}
       MONGO_USER: ${MONGO_USER}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
       MONGO_HOST: mongodb
-      MONGO_PORT: 27017
+      MONGO_PORT: ${MONGO_PORT_MEDECIN}
+      TARGET_PORT: ${BACKEND_PORT_HUB}
+
+
 
     depends_on:
       - keycloak
@@ -44,9 +47,9 @@ services:
       context: ./src/frontend
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+      - "3010:3000"
     environment:
-      REACT_APP_BACKEND_URL: http://localhost:${BACKEND_PORT}
+      REACT_APP_BACKEND_URL: http://localhost:${BACKEND_PORT_MEDECIN}
       REACT_APP_KEYCLOAK_URL: http://localhost:8080
     depends_on:
       - keycloak
@@ -56,6 +59,8 @@ services:
   db:
     image: postgres:16
     restart: always
+    ports:
+      - "5432:5432"
     environment:
       POSTGRES_DB: document
       POSTGRES_USER: ${DB_USER}
@@ -69,6 +74,8 @@ services:
   mongodb:
     image: mongo:7.0
     restart: always
+    ports:
+      - "27017:27017"
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
@@ -79,20 +86,156 @@ services:
       - mongodb_data:/data/db
       - ./mongo-entrypoint-initdb.d:/docker-entrypoint-initdb.d
 
-  python:
-    build: ./python_app
-    depends_on:
-      - db
-    volumes:
-      - ./python_app:/app
-    working_dir: /app
+# ---------------------------------------------------------------------------------------------------------------
+
+backend2:
+    build:
+      context: ./src/backend
+      dockerfile: Dockerfile 
+    ports:
+      - "3003:3002"
     environment:
-      - PYTHONUNBUFFERED=1
-      - DB_HOST=${DB_HOST}
-      - DB_PORT=${DB_PORT}
-      - DB_NAME=${DB_NAME}
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
+      KEYCLOAK_URL: http://keycloak:8080
+      KEYCLOAK_JWKS_URI: ${KEYCLOAK_JWKS_URI}
+      BACKEND_PORT: ${BACKEND_PORT}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT_HUB}
+      DB_NAME: ${DB_NAME}
+      MONGO_USER: ${MONGO_USER}
+      MONGO_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_HOST: mongodb
+      MONGO_PORT: ${MONGO_PORT_HUB}
+      TARGET_MEDECIN_PORT: ${BACKEND_PORT_MEDECIN}
+      TARGET_LABO_PORT: ${BACKEND_PORT_LABO}
+
+    depends_on:
+      - keycloak
+      - db
+      - mongodb
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./src/frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3011:3000"
+    environment:
+      REACT_APP_BACKEND_URL: http://localhost:${BACKEND_PORT_HUB}
+      REACT_APP_KEYCLOAK_URL: http://localhost:8080
+    depends_on:
+      - keycloak
+    networks:
+      - app-network
+
+  db:
+    image: postgres:16
+    restart: always
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: document
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - app-network
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+
+  mongodb:
+    image: mongo:7.0
+    restart: always
+    ports:
+      - "27018:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_INITDB_DATABASE: pdf_storage
+    networks:
+      - app-network
+    volumes:
+      - mongodb_data:/data/db
+      - ./mongo-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+
+# -------------------------------------------------------------------------------------------------------
+
+backend3:
+    build:
+      context: ./src/backend
+      dockerfile: Dockerfile 
+    ports:
+      - "3004:3002"
+    environment:
+      KEYCLOAK_URL: http://keycloak:8080
+      KEYCLOAK_JWKS_URI: ${KEYCLOAK_JWKS_URI}
+      BACKEND_PORT: ${BACKEND_PORT}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT_LABO}
+      DB_NAME: ${DB_NAME}
+      MONGO_USER: ${MONGO_USER}
+      MONGO_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_HOST: mongodb
+      MONGO_PORT: ${MONGO_PORT_LABO}
+      TARGET_PORT: ${BACKEND_PORT_HUB}
+
+
+    depends_on:
+      - keycloak
+      - db
+      - mongodb
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./src/frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3012:3000"
+    environment:
+      REACT_APP_BACKEND_URL: http://localhost:${BACKEND_PORT_LABO}
+      REACT_APP_KEYCLOAK_URL: http://localhost:8080
+    depends_on:
+      - keycloak
+    networks:
+      - app-network
+
+  db:
+    image: postgres:16
+    restart: always
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_DB: document
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - app-network
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+
+  mongodb:
+    image: mongo:7.0
+    restart: always
+    ports:
+      - "27019:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_INITDB_DATABASE: pdf_storage
+    networks:
+      - app-network
+    volumes:
+      - mongodb_data:/data/db
+      - ./mongo-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+
 
 networks:
   app-network:
