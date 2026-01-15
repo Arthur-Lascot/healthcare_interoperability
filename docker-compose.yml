@@ -37,12 +37,12 @@ services:
 
     depends_on:
       - keycloak
-      - db
-      - mongodb
+      - db1
+      - mongodb1
     networks:
       - app-network
 
-  frontend:
+  frontend1:
     build:
       context: ./src/frontend
       dockerfile: Dockerfile
@@ -56,7 +56,7 @@ services:
     networks:
       - app-network
 
-  db:
+  db1:
     image: postgres:16
     restart: always
     ports:
@@ -71,7 +71,7 @@ services:
       - pgdata:/var/lib/postgresql/data
       - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
 
-  mongodb:
+  mongodb1:
     image: mongo:7.0
     restart: always
     ports:
@@ -88,7 +88,7 @@ services:
 
 # ---------------------------------------------------------------------------------------------------------------
 
-backend2:
+  backend2:
     build:
       context: ./src/backend
       dockerfile: Dockerfile 
@@ -112,12 +112,12 @@ backend2:
 
     depends_on:
       - keycloak
-      - db
-      - mongodb
+      - db2
+      - mongodb2
     networks:
       - app-network
 
-  frontend:
+  frontend2:
     build:
       context: ./src/frontend
       dockerfile: Dockerfile
@@ -131,7 +131,7 @@ backend2:
     networks:
       - app-network
 
-  db:
+  db2:
     image: postgres:16
     restart: always
     ports:
@@ -146,7 +146,7 @@ backend2:
       - pgdata:/var/lib/postgresql/data
       - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
 
-  mongodb:
+  mongodb2:
     image: mongo:7.0
     restart: always
     ports:
@@ -163,7 +163,7 @@ backend2:
 
 # -------------------------------------------------------------------------------------------------------
 
-backend3:
+  backend3:
     build:
       context: ./src/backend
       dockerfile: Dockerfile 
@@ -187,12 +187,12 @@ backend3:
 
     depends_on:
       - keycloak
-      - db
-      - mongodb
+      - db3
+      - mongodb3
     networks:
       - app-network
 
-  frontend:
+  frontend3:
     build:
       context: ./src/frontend
       dockerfile: Dockerfile
@@ -206,7 +206,7 @@ backend3:
     networks:
       - app-network
 
-  db:
+  db3:
     image: postgres:16
     restart: always
     ports:
@@ -221,7 +221,7 @@ backend3:
       - pgdata:/var/lib/postgresql/data
       - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
 
-  mongodb:
+  mongodb3:
     image: mongo:7.0
     restart: always
     ports:
