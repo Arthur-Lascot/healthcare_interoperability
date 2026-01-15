@@ -1,7 +1,14 @@
 import { FileFormData } from "../components/FileManagement";
 
 class ApiService {
-  private baseUrl = 'http://localhost:3002/api';
+  private baseUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3002';
+  
+  constructor() {
+    // Ensure baseUrl ends with /api if not already present
+    if (!this.baseUrl.endsWith('/api')) {
+      this.baseUrl = `${this.baseUrl}/api`;
+    }
+  }
 
   async getFile(uuid: string, token: string): Promise<any> {
     const response = await fetch(`${this.baseUrl}/DocumentReference/${uuid}`, {
