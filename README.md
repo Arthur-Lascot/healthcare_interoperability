@@ -97,6 +97,9 @@ Le système gére :
 - Puis allez dans la section demande analyse et changer y l'ID avec celle que vous venez de copier
 - Vous pouvez allez dans l'interface HUB et LABO pour y retrouver le fichier de demande d'analyse
 - Dans l'interface mdecin vous devriez avoir un nouveau fichier resultat d'analyse, il en va de même pour le hub
+
+- Toutes ces étapes enregistre aussi des elements tel que les rendez-vous et les requetes de service.
+- Pour trouver les réponse au questions de la partie 3, un fichier tp3_questions.txt est disponible. 
   
 ## Utilisation de L'IA
 
