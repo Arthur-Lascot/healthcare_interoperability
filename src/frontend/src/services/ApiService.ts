@@ -144,6 +144,41 @@ class ApiService {
       throw new Error(`Erreur ${response.status}: ${response.statusText}`);
     }
   }
+
+  async createCR(crData: any, token: string): Promise<string> {
+    const response = await fetch(`${this.baseUrl}/CR`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(crData),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Erreur ${response.status}: ${response.statusText}`);
+    }
+
+    const result = await response.json();
+    return result.uuid;
+  }
+
+  async sendTransfertAnalyseRequest(bundleData: any, token: string): Promise<any> {
+    const response = await fetch(`${this.baseUrl}/TransfertAnalyseRequest`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(bundleData),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Erreur ${response.status}: ${response.statusText}`);
+    }
+
+    return response.json();
+  }
 }
 
 export default new ApiService();
