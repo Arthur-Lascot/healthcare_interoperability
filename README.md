@@ -27,6 +27,7 @@ Le système gére :
 -    **Practitioner**: Représente un praticien.
 -    **Patient**: Représente un Patient.
 -    **Appointment**: Représente un Rendez-vous.
+-    **ServiceRequest**: Représente une requete pour un service tel qu'un examen biologique.
 
 ## Choix des structures MOS
 
@@ -39,9 +40,11 @@ Le système gére :
 
 -   **Frontend** : application web (auth, recherche, upload).
 -   **Backend** : API REST multi-layer conforme FHIR (gestion des ressources).
--   **Base de données** : PostgreSQL
+-   **Base de données metadata** : PostgreSQL
 -   - Structures de données respectant le MOS + JSONB pour les ressources FHIR 
     - Stockage binaire pour les documents.
+-   **Base de données fichier** : Mongodb
+-   - Permet le stockage de pdf que nous pourrons lier avec les objets de la base précédente.
 -   **Auth & Access Control** : Keycloak et matrice d'habilitation.
 
 ## Ressources utilisés
@@ -52,21 +55,49 @@ Le système gére :
 ## Lancer le projet en dev
 - Avoir les variables d'environnement suivantes :
 -    - KEYCLOAK_ADMIN=admin
-     - KEYCLOAK_ADMIN_PASSWORD=admin
+     -  KEYCLOAK_ADMIN_PASSWORD=admin
      - KEYCLOAK_JWKS_URI=http://keycloak:8080/realms/healthcare/protocol/openid-connect/certs
 
      - BACKEND_PORT=3002
+     - BACKEND_PORT_MEDECIN=3005
+     - BACKEND_PORT_HUB=3003
+     - BACKEND_PORT_LABO=3004
 
-     - DB_HOST=localhost
+     - DB_HOST=db
      - DB_PORT=5432
+     - DB_PORT_MEDECIN=5435
+     - DB_PORT_HUB=5433
+     - DB_PORT_LABO=5434
      - DB_USER=postgres
      - DB_PASSWORD=motdepasse
      - DB_NAME=document
 
+     - MONGO_USER=mongouser
+     - MONGO_PASSWORD=mongopass123
+     - MONGO_PORT_MEDECIN=27020
+     - MONGO_PORT_HUB=27018
+     - MONGO_PORT_LABO=27019
+
 -   cd healthcare_interoperability
 -   docker-compose up -d
--   se connecter au front sur le port http://localhost:3000
+-   se connecter au front sur le port http://localhost:3010 (Interface medecin)
+-   se connecter au front sur le port http://localhost:3010 (Interface HUB)
+-   se connecter au front sur le port http://localhost:3010 (Interface LABO)
 
+## Tester le projet
+
+- Une fois connecté à l'interface medecin s'identifier (login : test, mdp : test) (privilege medecin)
+- Upload un PDF dans la section gestion des PDF
+- Copier son Id
+- Aller dans la section Créer compte-rendu, y changer l'ID avec celle que vous venez de copier
+- Envoyer le CR
+- Connecter vous à l'interface HUB
+- Allez sur la section Lister les documents, vous devriez voir deux documents (Votre CR ainsi qu'un fichier placeHolder)
+- Maintenant vous pouvez upload un pdf de demande d'analyse depuis l'interface medecin et en copier son ID
+- Puis allez dans la section demande analyse et changer y l'ID avec celle que vous venez de copier
+- Vous pouvez allez dans l'interface HUB et LABO pour y retrouver le fichier de demande d'analyse
+- Dans l'interface mdecin vous devriez avoir un nouveau fichier resultat d'analyse, il en va de même pour le hub
+  
 ## Utilisation de L'IA
 
 - Le frontend n'ayant pas été jugé comme le point important de ce projet a été majoritairement généré sauf pour s'assurer que la communication des formulaires soit bien en FHIR.
