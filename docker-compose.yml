@@ -29,7 +29,7 @@ services:
       DB_NAME: ${DB_NAME}
       MONGO_USER: ${MONGO_USER}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
-      MONGO_HOST: mongodb
+      MONGO_HOST: mongodb1
       MONGO_PORT: ${MONGO_PORT_MEDECIN}
       TARGET_PORT: ${BACKEND_PORT_HUB}
 
@@ -83,7 +83,7 @@ services:
     networks:
       - app-network
     volumes:
-      - mongodb_data:/data/db
+      - mongodb_data1:/data/db1
       - ./mongo-entrypoint-initdb.d:/docker-entrypoint-initdb.d
 
 # ---------------------------------------------------------------------------------------------------------------
@@ -105,7 +105,7 @@ services:
       DB_NAME: ${DB_NAME}
       MONGO_USER: ${MONGO_USER}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
-      MONGO_HOST: mongodb
+      MONGO_HOST: mongodb2
       MONGO_PORT: ${MONGO_PORT_HUB}
       TARGET_MEDECIN_PORT: ${BACKEND_PORT_MEDECIN}
       TARGET_LABO_PORT: ${BACKEND_PORT_LABO}
@@ -158,7 +158,7 @@ services:
     networks:
       - app-network
     volumes:
-      - mongodb_data:/data/db
+      - mongodb_data2:/data/db2
       - ./mongo-entrypoint-initdb.d:/docker-entrypoint-initdb.d
 
 # -------------------------------------------------------------------------------------------------------
@@ -180,7 +180,7 @@ services:
       DB_NAME: ${DB_NAME}
       MONGO_USER: ${MONGO_USER}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
-      MONGO_HOST: mongodb
+      MONGO_HOST: mongodb3
       MONGO_PORT: ${MONGO_PORT_LABO}
       TARGET_PORT: ${BACKEND_PORT_HUB}
 
@@ -233,7 +233,7 @@ services:
     networks:
       - app-network
     volumes:
-      - mongodb_data:/data/db
+      - mongodb_data3:/data/db3
       - ./mongo-entrypoint-initdb.d:/docker-entrypoint-initdb.d
 
 
@@ -243,4 +243,6 @@ networks:
 
 volumes:
   pgdata:
-  mongodb_data:
+  mongodb_data1:
+  mongodb_data2:
+  mongodb_data3:
