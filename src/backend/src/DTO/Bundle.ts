@@ -43,8 +43,8 @@ class Bundle extends Resource<"Bundle"> {
         }
         if (this.entry) {
             for (const e of this.entry) {
-                if (!VALID_MODE.includes(e.search!.mode)) {
-                    throw new ValidationError(`Error when initialising Bundle: Invalid mode value in entry: "${e.search!.mode}". 
+                if (e.search && !VALID_MODE.includes(e.search.mode)) {
+                    throw new ValidationError(`Error when initialising Bundle: Invalid mode value in entry: "${e.search.mode}". 
                                         Valid values: ${VALID_MODE.join(", ")}`);
                 }
             }
