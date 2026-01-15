@@ -89,6 +89,54 @@ class ApiService {
 
     return response.json();
   }
+
+  async uploadPDF(file: File, token: string): Promise<string> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const response = await fetch(`${this.baseUrl}/pdf/upload`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error(`Erreur ${response.status}: ${response.statusText}`);
+    }
+
+    const result = await response.json();
+    return result.data.pdf_id;
+  }
+
+  async downloadPDF(pdfId: string, token: string): Promise<Blob> {
+    const response = await fetch(`${this.baseUrl}/pdf/download/${pdfId}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Erreur ${response.status}: ${response.statusText}`);
+    }
+
+    return response.blob();
+  }
+
+  async deletePDF(pdfId: string, token: string): Promise<void> {
+    const response = await fetch(`${this.baseUrl}/pdf/${pdfId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Erreur ${response.status}: ${response.statusText}`);
+    }
+  }
 }
 
 export default new ApiService();

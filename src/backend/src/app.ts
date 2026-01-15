@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import file_routes from "./routes/files.routes";
+import pdf_routes from "./routes/pdf.routes";
 import { authMiddleware } from "./middlewares/auth_handler";
 import { errorHandler } from "./middlewares/error_handler";
 import { NotFoundError } from "./errors/AppError";
@@ -31,6 +32,7 @@ app.use(alsMiddleware);
 app.use(authMiddleware)
 
 app.use("/api", file_routes);
+app.use("/api/pdf", pdf_routes);
 
 app.use((req, res, next) => {
   const err = new NotFoundError(`Cannot find ${req.originalUrl} on this server`);

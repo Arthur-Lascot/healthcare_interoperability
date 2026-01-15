@@ -33,6 +33,7 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
     }
 
     req.role = decoded.realm_access?.roles || [];
+    req.userId = decoded.sub || decoded.preferred_username;
     next();
   });
 };

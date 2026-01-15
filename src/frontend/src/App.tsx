@@ -5,6 +5,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import LoadingSpinner from './components/LoadingSpinner';
 import LoginPage from './pages/LoginPage';
 import HomePage from './pages/HomePage';
+import PDFPage from './pages/PDFPage';
 import DocumentReferencesPage from './pages/DocumentReferencesPage';
 
 const AppRoutes: React.FC = () => {
@@ -27,6 +28,14 @@ const AppRoutes: React.FC = () => {
             <HomePage />
           </ProtectedRoute>
         } 
+      />
+      <Route 
+        path="/pdfs"
+        element={
+          <ProtectedRoute>
+            <PDFPage />
+          </ProtectedRoute>
+        }
       />
       <Route 
         path="/document-references"
